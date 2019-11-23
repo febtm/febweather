@@ -3,14 +3,14 @@
 $subject = $_POST['subject'];
 $message = $_POST['message'];
 
-$headers = 'From: <mfebinthomas@gmail.com>' . "\r\n" .
-        'Reply-To: <mfebinthomas@gmail.com>' . "\r\n" .
+$headers = 'From: Febulous <fmt.febulous@gmail.com>' . "\r\n" .
+        'Reply-To: Febulous <fmt.febulous@gmail.com>' . "\r\n" .
         'X-Mailer: PHP/' . phpversion();
 
 $receiver_email = "fmt.febulous@gmail.com";
 
 if(mail($receiver_email, $subject, $message, $headers))
-	echo "Thank You for your Message, kindly wait until our Team responds to it !";
+	echo "Your Message has been sent : Kindly wait until our Team responds to your Message !";
 
 else
 	echo "Sending Email Failed !";
