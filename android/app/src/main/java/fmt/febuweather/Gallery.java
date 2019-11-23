@@ -3,10 +3,14 @@ package fmt.febuweather;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,9 +59,27 @@ public class Gallery extends AppCompatActivity implements GoogleApiClient.OnConn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Window window = this.getWindow();
+
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+
+        }
+
         menu = new Menu(Gallery.this);
 
-        MENU_BUTTON = findViewById(R.id.ga_menu);
+        final BasicFunctions basicFunctions = new BasicFunctions(Gallery.this);
+
+        GA_LOC_IMAGE = (ImageView) findViewById(R.id.ga_loc_image);
+        GA_PREV_IMAGE = (ImageButton) findViewById(R.id.ga_prev_image);
+        GA_NEXT_IMAGE = (ImageButton) findViewById(R.id.ga_next_image);
+        GA_LOC_NAME = (TextView) findViewById(R.id.ga_loc_name);
+        MENU_BUTTON = (ImageButton) findViewById(R.id.ga_menu);
 
         MENU_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,21 +89,13 @@ public class Gallery extends AppCompatActivity implements GoogleApiClient.OnConn
             }
         });
 
-        final BasicFunctions basicFunctions = new BasicFunctions(Gallery.this);
-
-        GA_LOC_IMAGE = findViewById(R.id.ga_loc_image);
-        GA_PREV_IMAGE = findViewById(R.id.ga_prev_image);
-        GA_NEXT_IMAGE = findViewById(R.id.ga_next_image);
-        GA_LOC_NAME = findViewById(R.id.ga_loc_name);
-        MENU_BUTTON = findViewById(R.id.ga_menu);
-
         placeId = new String[]{ getString(R.string.ga_loc_id_usa),
                                 getString(R.string.ga_loc_id_uk),
                                 getString(R.string.ga_loc_id_aus),
                                 getString(R.string.ga_loc_id_nz),
                                 getString(R.string.ga_loc_id_india)};
 
-        AdView mAdView = findViewById(R.id.ga_adView);
+        AdView mAdView = (AdView) findViewById(R.id.ga_adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -236,7 +250,7 @@ public class Gallery extends AppCompatActivity implements GoogleApiClient.OnConn
     private void fetchImages(){
 
         pDialog = new ProgressDialog(Gallery.this);
-        pDialog.setMessage("Fetching Image ...");
+        pDialog.setMessage("Fetching Image !");
         pDialog.show();
 
         mGoogleApiClient = new GoogleApiClient
@@ -259,7 +273,7 @@ public class Gallery extends AppCompatActivity implements GoogleApiClient.OnConn
     private void fetchPreviousImage(){
 
         pDialog = new ProgressDialog(Gallery.this);
-        pDialog.setMessage("Fetching Image ...");
+        pDialog.setMessage("Fetching Image !");
 
         pDialog.show();
 
@@ -322,7 +336,7 @@ public class Gallery extends AppCompatActivity implements GoogleApiClient.OnConn
     private void fetchNextImage(){
 
         pDialog = new ProgressDialog(Gallery.this);
-        pDialog.setMessage("Fetching Image ...");
+        pDialog.setMessage("Fetching Image !");
 
         pDialog.show();
 

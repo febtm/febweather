@@ -9,9 +9,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -19,8 +20,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +33,6 @@ import com.google.android.gms.ads.AdView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import fmt.febuweather.helper.BasicFunctions;
@@ -40,7 +43,7 @@ public class OtherLocations extends AppCompatActivity {
 
 
     EditText OL_ENTER_LOCATION;
-    ImageButton MENU_BUTTON, OL_ADD_LOCATION, OL_ENTER_LOCATION_CANCEL;
+    ImageButton MENU_BUTTON, OL_ADD_LOCATION;
 
     ArrayList<LocationCurrentForecastValues> OL_LOCATION_LIST;
     RecyclerView mRecyclerView;
@@ -65,11 +68,26 @@ public class OtherLocations extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_locations);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Window window = this.getWindow();
+
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+
+        }
+
         basicFunctions = new BasicFunctions(OtherLocations.this);
 
         menu = new Menu(OtherLocations.this);
 
-        MENU_BUTTON = findViewById(R.id.ol_menu);
+        OL_ENTER_LOCATION = (EditText) findViewById(R.id.ol_enter_location);
+        OL_ADD_LOCATION = (ImageButton) findViewById(R.id.ol_add_location);
+        mRecyclerView = (RecyclerView) findViewById(R.id.ol_location_list);
+        MENU_BUTTON = (ImageButton) findViewById(R.id.ol_menu);
 
         MENU_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,20 +98,6 @@ public class OtherLocations extends AppCompatActivity {
             }
         });
 
-        OL_ENTER_LOCATION = findViewById(R.id.ol_enter_location);
-        OL_ADD_LOCATION = findViewById(R.id.ol_add_location);
-        OL_ENTER_LOCATION_CANCEL = findViewById(R.id.ol_enter_location_cancel);
-
-        OL_ENTER_LOCATION_CANCEL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                OL_ENTER_LOCATION.setText("");
-
-            }
-        });
-
-        mRecyclerView = findViewById(R.id.ol_location_list);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -256,7 +260,7 @@ public class OtherLocations extends AppCompatActivity {
             }
         });
 
-        AdView mAdView = findViewById(R.id.ol_adView);
+        AdView mAdView = (AdView) findViewById(R.id.ol_adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -308,7 +312,6 @@ public class OtherLocations extends AppCompatActivity {
     }
 
 
-    @SuppressLint("StaticFieldLeak")
     private class GetCurrentForecastTask extends AsyncTask<String, Void, JSONObject> {
 
         private GetCurrentForecastTask() {}
@@ -485,17 +488,20 @@ public class OtherLocations extends AppCompatActivity {
 
             TextView OL_LOCATION, OL_DESCRIPTION, OL_ICON, OL_TEMPERATURE, OL_HUMIDITY;
 
+            ImageView OL_MY_LOCATION;
+
             ImageButton OL_DELETE;
 
             DataHolder(final View itemView) {
                 super(itemView);
 
-                OL_LOCATION = itemView.findViewById(R.id.ol_li_location);
-                OL_DESCRIPTION = itemView.findViewById(R.id.ol_li_description);
-                OL_ICON = itemView.findViewById(R.id.ol_li_icon);
-                OL_TEMPERATURE = itemView.findViewById(R.id.ol_li_temperature);
-                OL_HUMIDITY = itemView.findViewById(R.id.ol_li_humidity);
-                OL_DELETE = itemView.findViewById(R.id.ol_li_delete_location);
+                OL_LOCATION = (TextView) itemView.findViewById(R.id.ol_i_location);
+                OL_DESCRIPTION = (TextView) itemView.findViewById(R.id.ol_i_description);
+                OL_ICON = (TextView) itemView.findViewById(R.id.ol_i_icon);
+                OL_TEMPERATURE = (TextView) itemView.findViewById(R.id.ol_i_temperature);
+                OL_HUMIDITY = (TextView) itemView.findViewById(R.id.ol_i_humidity);
+                OL_MY_LOCATION = (ImageView) itemView.findViewById(R.id.ol_i_my_location);
+                OL_DELETE = (ImageButton) itemView.findViewById(R.id.ol_i_delete_location);
 
                 OL_ICON.setTypeface(BasicFunctions.weatherFont);
 
@@ -555,7 +561,6 @@ public class OtherLocations extends AppCompatActivity {
                         intent.putExtra(basicFunctions.LOCATION_LATITUDE, DB_CURSOR.getString(1));
                         intent.putExtra(basicFunctions.LOCATION_LONGITUDE, DB_CURSOR.getString(2));
                         startActivity(intent);
-                        OtherLocations.this.finish();
 
                         DB_CURSOR.close();
 
@@ -572,11 +577,10 @@ public class OtherLocations extends AppCompatActivity {
             mDataset = myDataset;
         }
 
-        @NonNull
         @Override
-        public DataHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public DataHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_ol_list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_other_locations_item, parent, false);
 
             mRecyclerView.setMinimumHeight(mRecyclerView.getHeight() + view.getHeight());
 
@@ -585,7 +589,10 @@ public class OtherLocations extends AppCompatActivity {
 
         @SuppressWarnings("deprecation")
         @Override
-        public void onBindViewHolder(@NonNull DataHolder holder, int position) {
+        public void onBindViewHolder(DataHolder holder, int position) {
+
+            if(position == 0)
+                holder.OL_MY_LOCATION.setVisibility(View.VISIBLE);
 
             holder.OL_LOCATION.setText(mDataset.get(position).getOL_LOCATION());
             holder.OL_DESCRIPTION.setText(mDataset.get(position).getOL_DESCRIPTION());

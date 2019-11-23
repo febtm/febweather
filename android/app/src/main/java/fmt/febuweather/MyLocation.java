@@ -3,34 +3,34 @@ package fmt.febuweather;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
-import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -40,15 +40,14 @@ import com.luckycatlabs.sunrisesunset.dto.Location;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
+
+import com.facebook.appevents.AppEventsLogger;
 
 import fmt.febuweather.helper.BasicFunctions;
 import fmt.febuweather.helper.Menu;
@@ -62,7 +61,9 @@ public class MyLocation extends AppCompatActivity {
              ML_TEMPERATURE, ML_HUMIDITY, ML_PRESSURE,
              ML_WIND_SPEED, ML_WIND_ANGLE, ML_SUNRISE_TIME, ML_SUNSET_TIME;
 
-    ImageButton MENU_BUTTON;
+    EditText ML_ENTER_LOCATION;
+
+    ImageButton MENU_BUTTON, ML_ADD_LOCATION;
 
     String MY_LOCATION, MY_LOCATION_LATITUDE, MY_LOCATION_LONGITUDE;
 
@@ -74,7 +75,6 @@ public class MyLocation extends AppCompatActivity {
     SQLiteDatabase SQL_DB;
     Cursor DB_CURSOR;
 
-
     ArrayList<LocationDailyForecastValues> ML_DAILY_LOCATION_LIST;
     RecyclerView mDailyRecyclerView;
     RecyclerView.Adapter mDailyAdapter;
@@ -84,6 +84,10 @@ public class MyLocation extends AppCompatActivity {
     RecyclerView mHourlyRecyclerView;
     RecyclerView.Adapter mHourlyAdapter;
     RecyclerView.LayoutManager mHourlyLayoutManager;
+
+    LinearLayout ML_FORECAST_1, ML_FORECAST_2;
+
+    FrameLayout ML_L_LOCATION;
 
     int COUNT;
 
@@ -97,35 +101,47 @@ public class MyLocation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_my_location);
 
         Fabric.with(this, new Crashlytics());
 
-        AppEventsLogger.activateApp(getApplication());
+        AppEventsLogger.activateApp(this);
 
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-6196885651315287~3113095854");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        AdView mAdView = findViewById(R.id.ml_adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+            Window window = this.getWindow();
+
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+
+        }
 
         basicFunctions = new BasicFunctions(MyLocation.this);
 
         menu = new Menu(MyLocation.this);
 
-        ML_LOCATION = findViewById(R.id.ml_location);
-        ML_ICON = findViewById(R.id.ml_icon);
-        ML_DESCRIPTION = findViewById(R.id.ml_description);
-        ML_TEMPERATURE = findViewById(R.id.ml_temperature);
-        ML_HUMIDITY = findViewById(R.id.ml_humidity);
-        ML_PRESSURE = findViewById(R.id.ml_pressure);
-        ML_WIND_SPEED = findViewById(R.id.ml_wind_speed);
-        ML_WIND_ANGLE = findViewById(R.id.ml_wind_angle);
-        ML_SUNRISE_TIME = findViewById(R.id.ml_sunrise_time);
-        ML_SUNSET_TIME = findViewById(R.id.ml_sunset_time);
-        mDailyRecyclerView = findViewById(R.id.ml_daily_forecast);
-        mHourlyRecyclerView = findViewById(R.id.ml_hourly_forecast);
-        MENU_BUTTON = findViewById(R.id.ml_menu);
+        ML_FORECAST_1 = (LinearLayout) findViewById(R.id.ml_forecast_1);
+        ML_FORECAST_2 = (LinearLayout) findViewById(R.id.ml_forecast_2);
+        ML_L_LOCATION = (FrameLayout) findViewById(R.id.ml_l_location);
+        ML_ENTER_LOCATION = (EditText) findViewById(R.id.ml_enter_location);
+        ML_ADD_LOCATION = (ImageButton) findViewById(R.id.ml_add_location);
+        ML_LOCATION = (TextView) findViewById(R.id.ml_location);
+        ML_ICON = (TextView) findViewById(R.id.ml_icon);
+        ML_DESCRIPTION = (TextView) findViewById(R.id.ml_description);
+        ML_TEMPERATURE = (TextView) findViewById(R.id.ml_temperature);
+        ML_HUMIDITY = (TextView) findViewById(R.id.ml_humidity);
+        ML_PRESSURE = (TextView) findViewById(R.id.ml_pressure);
+        ML_WIND_SPEED = (TextView) findViewById(R.id.ml_wind_speed);
+        ML_WIND_ANGLE = (TextView) findViewById(R.id.ml_wind_angle);
+        ML_SUNRISE_TIME = (TextView) findViewById(R.id.ml_sunrise_time);
+        ML_SUNSET_TIME = (TextView) findViewById(R.id.ml_sunset_time);
+        mDailyRecyclerView = (RecyclerView) findViewById(R.id.ml_daily_forecast);
+        mHourlyRecyclerView = (RecyclerView) findViewById(R.id.ml_hourly_forecast);
+        MENU_BUTTON = (ImageButton) findViewById(R.id.ml_menu);
 
         MENU_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +170,7 @@ public class MyLocation extends AppCompatActivity {
         if(DB_CURSOR.getCount() > 0) {
 
             DB_CURSOR.moveToFirst();
+
 
             if(DB_CURSOR.getInt(1) == 0)
                 UNIT_TEMPERATURE = 0;
@@ -333,18 +350,27 @@ public class MyLocation extends AppCompatActivity {
 
         if(MY_LOCATION == null && MY_LOCATION_LATITUDE == null && MY_LOCATION_LONGITUDE == null){
 
-            if (ActivityCompat.checkSelfPermission(MyLocation.this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(MyLocation.this,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            SQL_DB = mOpenHelper.getReadableDatabase();
 
-                ActivityCompat.requestPermissions(MyLocation.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            String SQL_CREATE = "CREATE TABLE IF NOT EXISTS '" + basicFunctions.MY_LOCATIONS_TABLE + "' ( '"
+                    + basicFunctions.LOCATION_NAME + "' TEXT NOT NULL, '"
+                    + basicFunctions.LOCATION_LATITUDE + "' TEXT NOT NULL, '"
+                    + basicFunctions.LOCATION_LONGITUDE + "' TEXT NOT NULL );";
 
-            }
+            SQL_DB.execSQL(SQL_CREATE);
 
-            else
-                if (basicFunctions.isConnectingToInternet())
-                    getLocation();
+            String SQL_SELECT = "SELECT * FROM " + basicFunctions.MY_LOCATIONS_TABLE + " LIMIT 1";
+
+            DB_CURSOR = SQL_DB.rawQuery(SQL_SELECT, null);
+
+            if(DB_CURSOR.moveToFirst()) {
+
+                MY_LOCATION = DB_CURSOR.getString(0);
+                MY_LOCATION_LATITUDE = DB_CURSOR.getString(1);
+                MY_LOCATION_LONGITUDE = DB_CURSOR.getString(2);
+
+                if(basicFunctions.isConnectingToInternet())
+                    fetchForecast();
 
                 else {
 
@@ -356,7 +382,7 @@ public class MyLocation extends AppCompatActivity {
                                 case DialogInterface.BUTTON_POSITIVE:
 
                                     if(basicFunctions.isConnectingToInternet())
-                                        getLocation();
+                                        fetchForecast();
 
                                     else
                                         Toast.makeText(MyLocation.this,
@@ -385,6 +411,79 @@ public class MyLocation extends AppCompatActivity {
                             .setNegativeButton("No", dialogClickListener).show();
 
                 }
+            }
+
+            else {
+
+                Toast.makeText(MyLocation.this, "Your Location List is empty !", Toast.LENGTH_LONG).show();
+
+                ML_FORECAST_1.setVisibility(View.GONE);
+                ML_FORECAST_2.setVisibility(View.GONE);
+                ML_L_LOCATION.setVisibility(View.VISIBLE);
+
+                ML_ADD_LOCATION.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        final String location = ML_ENTER_LOCATION.getText().toString();
+
+                        if (TextUtils.isEmpty(location))
+                            Toast.makeText(MyLocation.this, "Kindly enter a Location !", Toast.LENGTH_LONG).show();
+
+                        else {
+
+                            if(basicFunctions.isConnectingToInternet())
+                                addLocation(location);
+
+                            else {
+
+                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+
+                                            case DialogInterface.BUTTON_POSITIVE:
+
+                                                if(basicFunctions.isConnectingToInternet())
+                                                    addLocation(location);
+
+                                                else
+                                                    Toast.makeText(MyLocation.this,
+                                                            "No Internet Connection. Try again later !",
+                                                            Toast.LENGTH_LONG).show();
+
+                                                break;
+
+                                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                                Toast.makeText(MyLocation.this,
+                                                        "No Internet Connection. Try again later !",
+                                                        Toast.LENGTH_LONG).show();
+
+                                                dialog.dismiss();
+
+                                                break;
+
+                                        }
+                                    }
+                                };
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MyLocation.this);
+                                builder.setMessage("No Internet Connection. Try again ?")
+                                        .setPositiveButton("Yes", dialogClickListener)
+                                        .setNegativeButton("No", dialogClickListener).show();
+
+                            }
+
+                        }
+                    }
+                });
+
+            }
+
+            DB_CURSOR.close();
+
+            SQL_DB.close();
 
         }
 
@@ -435,88 +534,11 @@ public class MyLocation extends AppCompatActivity {
 
         }
 
-    }
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-6196885651315287~3113095854");
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-
-            case 0: {
-
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    getLocation();
-
-                else
-                    Toast.makeText(MyLocation.this, "Kindly grant Location permission to continue !", Toast.LENGTH_LONG).show();
-
-                break;
-            }
-
-            default:
-                break;
-
-        }
-    }
-
-
-    @SuppressLint("MissingPermission")
-    private void getLocation(){
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        assert locationManager != null;
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, new Listener());
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, new Listener());
-
-        android.location.Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        if (location == null)
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        setDetails(location);
-
-        fetchForecast();
-
-    }
-
-
-    private void setDetails(android.location.Location location){
-
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
-        MY_LOCATION_LATITUDE = String.valueOf(location.getLatitude());
-
-        MY_LOCATION_LONGITUDE = String.valueOf(location.getLongitude());
-
-        List<Address> addresses = null;
-
-        try {
-
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
-
-        assert addresses != null;
-
-        MY_LOCATION = addresses.get(0).getLocality();
-
-    }
-
-
-    private class Listener implements LocationListener {
-
-        public void onLocationChanged(android.location.Location location) {}
-        public void onProviderDisabled(String provider){}
-        public void onProviderEnabled(String provider){}
-        public void onStatusChanged(String provider, int status, Bundle extras){}
+        AdView mAdView = (AdView) findViewById(R.id.ml_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
     }
 
@@ -524,7 +546,7 @@ public class MyLocation extends AppCompatActivity {
     private void fetchForecast(){
 
         progressDialog = new ProgressDialog(MyLocation.this);
-        progressDialog.setMessage("Fetching Forecast ... ");
+        progressDialog.setMessage("Fetching Forecast Details ... ");
         progressDialog.show();
 
         new GetCurrentForecastTask().execute();
@@ -532,7 +554,52 @@ public class MyLocation extends AppCompatActivity {
     }
 
 
-    @SuppressLint("StaticFieldLeak")
+    private void addLocation(String location) {
+
+        progressDialog = new ProgressDialog(MyLocation.this);
+        progressDialog.setMessage("Adding Location ... ");
+        progressDialog.show();
+
+        Address address = basicFunctions.getLatLong(location);
+
+        String latitude = String.valueOf(address.getLatitude());
+
+        String longitude = String.valueOf(address.getLongitude());
+
+        SQL_DB = mOpenHelper.getWritableDatabase();
+
+        String SQL_INSERT = "INSERT INTO '" + basicFunctions.MY_LOCATIONS_TABLE + "' ( '"
+                + basicFunctions.LOCATION_NAME + "', '" + basicFunctions.LOCATION_LATITUDE + "', '"
+                + basicFunctions.LOCATION_LONGITUDE + "' ) VALUES ( '" + location + "', '"
+                + latitude + "', '" + longitude + "' )";
+
+        SQL_DB.execSQL(SQL_INSERT);
+
+        SQL_DB.close();
+
+        ML_ENTER_LOCATION.setText("");
+
+        Toast.makeText(MyLocation.this, location + " has been added !", Toast.LENGTH_LONG).show();
+
+        progressDialog.dismiss();
+
+        ML_FORECAST_1.setVisibility(View.VISIBLE);
+        ML_FORECAST_2.setVisibility(View.VISIBLE);
+        ML_L_LOCATION.setVisibility(View.GONE);
+
+        progressDialog = new ProgressDialog(MyLocation.this);
+        progressDialog.setMessage("Fetching Forecast Details ... ");
+        progressDialog.show();
+
+        MY_LOCATION = location;
+        MY_LOCATION_LATITUDE = latitude;
+        MY_LOCATION_LONGITUDE = longitude;
+
+        new GetCurrentForecastTask().execute();
+
+    }
+
+
     private class GetCurrentForecastTask extends AsyncTask<String, Void, JSONObject> {
 
         private GetCurrentForecastTask() {}
@@ -593,7 +660,7 @@ public class MyLocation extends AppCompatActivity {
                     long sunrise_millis = sys.getLong("sunrise") * 1000L;
                     long sunset_millis = sys.getLong("sunset") * 1000L;
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                    sdf.setTimeZone(TimeZone.getDefault());
+                    sdf.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
 
                     Date d = new Date(sunrise_millis);
                     sunrise_time = sdf.format(d);
@@ -642,7 +709,6 @@ public class MyLocation extends AppCompatActivity {
     }
 
 
-    @SuppressLint("StaticFieldLeak")
     private class GetHourlyForecastTask extends AsyncTask<String, Void, JSONObject> {
 
         private GetHourlyForecastTask() {}
@@ -692,20 +758,19 @@ public class MyLocation extends AppCompatActivity {
                     if(today.get(Calendar.DATE) == original.get(Calendar.DATE)){
 
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                        sdf.setTimeZone(TimeZone.getDefault());
+                        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
                         time = "Today, " + sdf.format(d);
 
                     } else{
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEE, HH:mm");
-                        sdf.setTimeZone(TimeZone.getDefault());
+                        SimpleDateFormat sdf = new SimpleDateFormat("EE, HH:mm");
+                        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
                         time = sdf.format(d);
 
                     }
 
                     Location location = new Location(MY_LOCATION_LATITUDE, MY_LOCATION_LONGITUDE);
-
-                    SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, TimeZone.getDefault());
+                    SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, "Asia/Calcutta");
 
                     String sunriseForDate = calculator.getOfficialSunriseForDate(original) + ":00";
                     String sunsetForDate = calculator.getOfficialSunsetForDate(original) + ":00";
@@ -769,11 +834,11 @@ public class MyLocation extends AppCompatActivity {
             DataHolder(final View itemView) {
                 super(itemView);
 
-                ML_H_TIME = itemView.findViewById(R.id.ml_li_h_time);
-                ML_H_ICON = itemView.findViewById(R.id.ml_li_h_icon);
-                ML_H_TEMPERATURE = itemView.findViewById(R.id.ml_li_h_temperature);
-                ML_H_HUMIDITY = itemView.findViewById(R.id.ml_li_h_humidity);
-                ML_H_PRESSURE = itemView.findViewById(R.id.ml_li_h_pressure);
+                ML_H_TIME = (TextView) itemView.findViewById(R.id.ml_i_h_time);
+                ML_H_ICON = (TextView) itemView.findViewById(R.id.ml_i_h_icon);
+                ML_H_TEMPERATURE = (TextView) itemView.findViewById(R.id.ml_i_h_temperature);
+                ML_H_HUMIDITY = (TextView) itemView.findViewById(R.id.ml_i_h_humidity);
+                ML_H_PRESSURE = (TextView) itemView.findViewById(R.id.ml_i_h_pressure);
 
                 ML_H_ICON.setTypeface(BasicFunctions.weatherFont);
 
@@ -785,11 +850,10 @@ public class MyLocation extends AppCompatActivity {
             mDataset = myDataset;
         }
 
-        @NonNull
         @Override
-        public DataHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public DataHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_ml_li_hourly, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_my_location_item_hourly, parent, false);
 
             mHourlyRecyclerView.setMinimumHeight(mHourlyRecyclerView.getHeight() + view.getHeight());
 
@@ -798,7 +862,7 @@ public class MyLocation extends AppCompatActivity {
 
         @SuppressWarnings("deprecation")
         @Override
-        public void onBindViewHolder(@NonNull DataHolder holder, int position) {
+        public void onBindViewHolder(DataHolder holder, int position) {
 
             holder.ML_H_TIME.setText(mDataset.get(position).getML_H_TIME());
             holder.ML_H_ICON.setText(Html.fromHtml(mDataset.get(position).getML_H_ICON()));
@@ -865,7 +929,6 @@ public class MyLocation extends AppCompatActivity {
     }
 
 
-    @SuppressLint("StaticFieldLeak")
     private class GetDailyForecastTask extends AsyncTask<String, Void, JSONObject> {
 
         private GetDailyForecastTask() {}
@@ -914,21 +977,20 @@ public class MyLocation extends AppCompatActivity {
 
                     if(today.get(Calendar.DATE) == original.get(Calendar.DATE)){
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("d | M");
-                        sdf.setTimeZone(TimeZone.getDefault());
+                        SimpleDateFormat sdf = new SimpleDateFormat("d / M");
+                        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
                         date = "Today, " + sdf.format(d);
 
                     } else{
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("EE, d | M");
-                        sdf.setTimeZone(TimeZone.getDefault());
+                        SimpleDateFormat sdf = new SimpleDateFormat("EE, d / M");
+                        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
                         date = sdf.format(d);
 
                     }
 
                     Location location = new Location(MY_LOCATION_LATITUDE, MY_LOCATION_LONGITUDE);
-
-                    SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, TimeZone.getDefault());
+                    SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, "Asia/Calcutta");
 
                     String sunriseForDate = calculator.getOfficialSunriseForDate(original) + ":00";
                     String sunsetForDate = calculator.getOfficialSunsetForDate(original) + ":00";
@@ -986,10 +1048,10 @@ public class MyLocation extends AppCompatActivity {
             DataHolder(final View itemView) {
                 super(itemView);
 
-                ML_D_DATE = itemView.findViewById(R.id.ml_li_d_date);
-                ML_D_ICON = itemView.findViewById(R.id.ml_li_d_icon);
-                ML_D_DESCRIPTION = itemView.findViewById(R.id.ml_li_d_description);
-                ML_D_TEMPERATURE = itemView.findViewById(R.id.ml_li_d_temperature);
+                ML_D_DATE = (TextView) itemView.findViewById(R.id.ml_i_d_date);
+                ML_D_ICON = (TextView) itemView.findViewById(R.id.ml_i_d_icon);
+                ML_D_DESCRIPTION = (TextView) itemView.findViewById(R.id.ml_i_d_description);
+                ML_D_TEMPERATURE = (TextView) itemView.findViewById(R.id.ml_i_d_temperature);
 
                 ML_D_ICON.setTypeface(BasicFunctions.weatherFont);
 
@@ -1001,11 +1063,10 @@ public class MyLocation extends AppCompatActivity {
             mDataset = myDataset;
         }
 
-        @NonNull
         @Override
-        public DataHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public DataHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_ml_li_daily, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_my_location_item_daily, parent, false);
 
             mDailyRecyclerView.setMinimumHeight(mDailyRecyclerView.getHeight() + view.getHeight());
 
@@ -1014,7 +1075,7 @@ public class MyLocation extends AppCompatActivity {
 
         @SuppressWarnings("deprecation")
         @Override
-        public void onBindViewHolder(@NonNull DataHolder holder, int position) {
+        public void onBindViewHolder(DataHolder holder, int position) {
 
             holder.ML_D_DATE.setText(mDataset.get(position).getML_D_DATE());
             holder.ML_D_DESCRIPTION.setText(mDataset.get(position).getML_D_DESCRIPTION());

@@ -6,17 +6,10 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.support.v4.app.ActivityCompat;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -25,11 +18,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 import fmt.febuweather.MyLocation;
 import fmt.febuweather.R;
@@ -55,6 +45,12 @@ public class WidgetProvider extends AppWidgetProvider {
     private AppWidgetManager mAppWidgetManager;
 
     private int mWidgetId;
+
+    private Runnable mTimeStatusChecker;
+
+    private int mTimeDetailsInterval = 5 * 1000;
+
+    private Handler mTimeHandler;
 
 
     @Override
@@ -126,32 +122,67 @@ public class WidgetProvider extends AppWidgetProvider {
             SQL_DB.close();
 
 
-            if (!(ActivityCompat.checkSelfPermission(mContext,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(mContext,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            mTimeHandler = new Handler();
 
-                if (basicFunctions.isConnectingToInternet()) {
+            mTimeStatusChecker = new Runnable() {
+                @Override
+                public void run() {
+                    try {
 
-                    remoteViews.setViewVisibility(R.id.wp_no_network, View.GONE);
+                        Calendar c = Calendar.getInstance();
 
-                    remoteViews.setViewVisibility(R.id.wp_no_location_permission, View.GONE);
+                        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
-                    remoteViews.setViewVisibility(R.id.wp_location, View.VISIBLE);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, d / M");
 
-                    remoteViews.setViewVisibility(R.id.wp_forecast_details, View.VISIBLE);
+                        remoteViews.setTextViewText(R.id.wi_time, timeFormat.format(c.getTime()));
 
-                    getLocation();
+                        remoteViews.setTextViewText(R.id.wi_date, dateFormat.format(c.getTime()));
 
+                        mAppWidgetManager.updateAppWidget(mWidgetId, remoteViews);
+
+                    } finally {
+                        mTimeHandler.postDelayed(mTimeStatusChecker, mTimeDetailsInterval);
+                    }
                 }
+            };
+
+            startRepeatingTask();
+
+
+            SQL_DB = mOpenHelper.getReadableDatabase();
+
+            String SQL_CREATE = "CREATE TABLE IF NOT EXISTS '" + basicFunctions.MY_LOCATIONS_TABLE + "' ( '"
+                    + basicFunctions.LOCATION_NAME + "' TEXT NOT NULL, '"
+                    + basicFunctions.LOCATION_LATITUDE + "' TEXT NOT NULL, '"
+                    + basicFunctions.LOCATION_LONGITUDE + "' TEXT NOT NULL );";
+
+            SQL_DB.execSQL(SQL_CREATE);
+
+            String SQL_SELECT = "SELECT * FROM " + basicFunctions.MY_LOCATIONS_TABLE + " LIMIT 1";
+
+            DB_CURSOR = SQL_DB.rawQuery(SQL_SELECT, new String[] {});
+
+            if(DB_CURSOR.moveToFirst()) {
+
+                MY_LOCATION = DB_CURSOR.getString(0);
+                MY_LOCATION_LATITUDE = DB_CURSOR.getString(1);
+                MY_LOCATION_LONGITUDE = DB_CURSOR.getString(2);
+
+                remoteViews.setViewVisibility(R.id.wi_location, View.VISIBLE);
+
+                remoteViews.setTextViewText(R.id.wi_location, MY_LOCATION);
+
+                if(basicFunctions.isConnectingToInternet())
+                    fetchForecast();
 
                 else {
 
-                    remoteViews.setViewVisibility(R.id.wp_no_network, View.VISIBLE);
+                    remoteViews.setViewVisibility(R.id.wi_no_network, View.VISIBLE);
 
-                    remoteViews.setViewVisibility(R.id.wp_no_location_permission, View.GONE);
+                    remoteViews.setViewVisibility(R.id.wi_no_location, View.GONE);
 
-                    remoteViews.setViewVisibility(R.id.wp_forecast_details, View.GONE);
+                    remoteViews.setViewVisibility(R.id.wi_forecast_details, View.GONE);
 
                 }
 
@@ -159,128 +190,53 @@ public class WidgetProvider extends AppWidgetProvider {
 
             else {
 
-                remoteViews.setViewVisibility(R.id.wp_no_network, View.GONE);
+                remoteViews.setViewVisibility(R.id.wi_location, View.GONE);
 
-                remoteViews.setViewVisibility(R.id.wp_no_location_permission, View.VISIBLE);
+                remoteViews.setViewVisibility(R.id.wi_no_network, View.GONE);
 
-                remoteViews.setViewVisibility(R.id.wp_forecast_details, View.GONE);
+                remoteViews.setViewVisibility(R.id.wi_no_location, View.VISIBLE);
+
+                remoteViews.setViewVisibility(R.id.wi_forecast_details, View.GONE);
 
             }
 
-            showTime();
-
             Intent openIntent = new Intent(mContext, MyLocation.class);
             PendingIntent openPendingIntent = PendingIntent.getActivity(context, 99998, openIntent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.wp_no_location_permission_button, openPendingIntent);
-            remoteViews.setOnClickPendingIntent(R.id.wp_forecast_details, openPendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.wi_no_location_button, openPendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.wi_forecast_details, openPendingIntent);
 
             Intent refreshIntent = new Intent(mContext, WidgetProvider.class);
             refreshIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
             PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(mContext, 99999, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.wp_no_network_button, refreshPendingIntent);
-            remoteViews.setOnClickPendingIntent(R.id.wp_no_network_refresh, refreshPendingIntent);
-            remoteViews.setOnClickPendingIntent(R.id.wp_no_location_permission_refresh, refreshPendingIntent);
-            remoteViews.setOnClickPendingIntent(R.id.wp_location_details_refresh, refreshPendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.wi_no_network_button, refreshPendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.wi_no_network_refresh, refreshPendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.wi_no_location_refresh, refreshPendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.wi_location_details_refresh, refreshPendingIntent);
 
             mAppWidgetManager.updateAppWidget(mWidgetId, remoteViews);
+
+            DB_CURSOR.close();
+
+            SQL_DB.close();
 
         }
     }
 
 
-    @SuppressLint("MissingPermission")
-    private void getLocation(){
+    private void fetchForecast(){
 
-        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        remoteViews.setViewVisibility(R.id.wi_no_network, View.GONE);
 
-        assert locationManager != null;
+        remoteViews.setViewVisibility(R.id.wi_no_location, View.GONE);
 
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, new Listener());
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, new Listener());
-
-        android.location.Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        if (location == null)
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        setDetails(location);
+        remoteViews.setViewVisibility(R.id.wi_forecast_details, View.VISIBLE);
 
         new GetCurrentForecastTask().execute();
 
     }
 
 
-    private void setDetails(android.location.Location location){
-
-        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
-
-        MY_LOCATION_LATITUDE = String.valueOf(location.getLatitude());
-
-        MY_LOCATION_LONGITUDE = String.valueOf(location.getLongitude());
-
-        List<Address> addresses = null;
-
-        try {
-
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
-
-        assert addresses != null;
-
-        MY_LOCATION = addresses.get(0).getLocality();
-
-        remoteViews.setTextViewText(R.id.wp_location, MY_LOCATION);
-
-    }
-
-
-    private class Listener implements LocationListener {
-
-        public void onLocationChanged(android.location.Location location) {}
-        public void onProviderDisabled(String provider){}
-        public void onProviderEnabled(String provider){}
-        public void onStatusChanged(String provider, int status, Bundle extras){}
-
-    }
-
-
-    private void showTime(){
-
-        CountDownTimer newtimer = new CountDownTimer(1000000000, 5000) {
-
-            @SuppressLint("SetTextI18n")
-            public void onTick(long millisUntilFinished) {
-
-                Calendar c = Calendar.getInstance();
-
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH : mm");
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EE, d | M");
-
-                remoteViews.setTextViewText(R.id.wp_time, timeFormat.format(c.getTime()));
-
-                remoteViews.setTextViewText(R.id.wp_date, dateFormat.format(c.getTime()));
-
-                mAppWidgetManager.updateAppWidget(mWidgetId, remoteViews);
-
-            }
-
-            public void onFinish() {}
-        };
-
-        newtimer.start();
-
-    }
-
-
-    @SuppressLint("StaticFieldLeak")
     private class GetCurrentForecastTask extends AsyncTask<String, Void, JSONObject> {
 
         private GetCurrentForecastTask() {}
@@ -351,21 +307,21 @@ public class WidgetProvider extends AppWidgetProvider {
                     String wind_angle = wind.getDouble("deg") + " degrees";
 
 
-                    remoteViews.setTextViewText(R.id.wp_temperature, temperature);
+                    remoteViews.setTextViewText(R.id.wi_temperature, temperature);
 
-                    remoteViews.setTextViewText(R.id.wp_description, description);
-
-
-                    remoteViews.setTextViewText(R.id.wp_pressure, pressure);
-
-                    remoteViews.setTextViewText(R.id.wp_humidity, humidity);
-
-                    remoteViews.setTextViewText(R.id.wp_maxmintemp, max_min_temp);
+                    remoteViews.setTextViewText(R.id.wi_description, description);
 
 
-                    remoteViews.setTextViewText(R.id.wp_wind_speed, wind_speed);
+                    remoteViews.setTextViewText(R.id.wi_pressure, pressure);
 
-                    remoteViews.setTextViewText(R.id.wp_wind_angle, wind_angle);
+                    remoteViews.setTextViewText(R.id.wi_humidity, humidity);
+
+                    remoteViews.setTextViewText(R.id.wi_maxmintemp, max_min_temp);
+
+
+                    remoteViews.setTextViewText(R.id.wi_wind_speed, wind_speed);
+
+                    remoteViews.setTextViewText(R.id.wi_wind_angle, wind_angle);
 
 
                     mAppWidgetManager.updateAppWidget(mWidgetId, remoteViews);
@@ -379,6 +335,10 @@ public class WidgetProvider extends AppWidgetProvider {
             }
 
         }
+    }
+
+    void startRepeatingTask() {
+        mTimeStatusChecker.run();
     }
 
 }

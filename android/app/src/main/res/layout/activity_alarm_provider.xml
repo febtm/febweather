@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ml_background">
+    android:background="@color/colorPrimaryTransparent77">
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="30dp"
+    android:paddingBottom="30dp"
     android:gravity="center"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:orientation="vertical">
 
     <TextView
@@ -23,30 +20,33 @@
         android:gravity="center"
         android:visibility="visible"
         android:textColor="@color/colorSecondary"
-        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryTransparent77">
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@color/colorSecondaryTransparent77">
 
     <LinearLayout
+        android:id="@+id/ap_location_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_margin="5dp"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:weightSum="2"
-            android:baselineAligned="false">
+            android:background="@color/colorSecondaryTransparent77"
+            android:weightSum="2">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -54,8 +54,7 @@
             android:layout_weight="1"
             android:padding="5dp"
             android:gravity="center"
-            android:orientation="vertical"
-            tools:ignore="UseCompoundDrawables">
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="100dp"
@@ -88,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginBottom="10dp"
-                android:text="@string/ap_time"
+                android:text="Time"
                 android:textColor="@color/colorSecondary"
                 android:textSize="50sp"
                 android:textStyle="bold" />
@@ -99,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/ap_location"
+                android:text="Location"
                 android:textColor="@color/colorSecondary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -110,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/ap_date"
+                android:text="Date"
                 android:textColor="@color/colorSecondary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -124,7 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:background="@color/colorSecondaryTransparent77"
+            android:background="@color/colorPrimaryTransparent77"
             android:orientation="vertical">
 
         <LinearLayout
@@ -141,8 +140,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -211,8 +209,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -240,8 +237,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -267,8 +263,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -316,8 +311,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    tools:ignore="UseCompoundDrawables">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -343,8 +337,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    tools:ignore="UseCompoundDrawables">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -379,8 +372,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
         android:textColor="@color/colorSecondary"
         android:background="@color/colorPrimaryTransparent77"
         android:textSize="16sp"
@@ -395,6 +386,7 @@
         android:text="@string/ap_dismiss"
         android:textColor="@color/colorPrimary"
         android:background="@color/colorSecondary"
+        android:layout_marginTop="20dp"
         android:textSize="16sp"
         android:textStyle="bold" />
 

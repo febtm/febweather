@@ -1,11 +1,9 @@
 package fmt.febuweather.helper;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import com.navdrawer.SimpleSideDrawer;
 import fmt.febuweather.R;
 
 
-@SuppressLint("Registered")
 public class Menu extends Activity{
 
 
@@ -52,13 +49,10 @@ public class Menu extends Activity{
         MenuItemList.add(new MenuListItem(MenuTitles[2], MenuIcons.getResourceId(2, -1)));
         MenuItemList.add(new MenuListItem(MenuTitles[3], MenuIcons.getResourceId(3, -1)));
         MenuItemList.add(new MenuListItem(MenuTitles[4], MenuIcons.getResourceId(4, -1)));
-        MenuItemList.add(new MenuListItem(MenuTitles[5], MenuIcons.getResourceId(5, -1)));
-        MenuItemList.add(new MenuListItem(MenuTitles[6], MenuIcons.getResourceId(6, -1)));
-        MenuItemList.add(new MenuListItem(MenuTitles[7], MenuIcons.getResourceId(7, -1)));
 
         MenuIcons.recycle();
 
-        MenuList = menuActivity.findViewById(R.id.me_list);
+        MenuList = (ListView) menuActivity.findViewById(R.id.menu_list);
         MenuListAdapter = new MenuListAdapter(menuActivity, MenuItemList);
         MenuList.setAdapter(MenuListAdapter);
         MenuList.setOnItemClickListener(new SlideMenuClickListener());
@@ -99,13 +93,12 @@ public class Menu extends Activity{
             if (convertView == null) {
 
                 LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-                assert mInflater != null;
-                convertView = mInflater.inflate(R.layout.activity_me_list_item, parent, false);
+                convertView = mInflater.inflate(R.layout.activity_menu_item, parent, false);
 
             }
 
-            ImageView imgIcon = convertView.findViewById(R.id.me_li_icon);
-            TextView txtTitle = convertView.findViewById(R.id.me_li_title);
+            ImageView imgIcon = (ImageView) convertView.findViewById(R.id.menu_list_item_icon);
+            TextView txtTitle = (TextView) convertView.findViewById(R.id.menu_list_item_title);
 
             imgIcon.setImageResource(menuListItems.get(position).getIcon());
             txtTitle.setText(menuListItems.get(position).getTitle());
@@ -159,73 +152,31 @@ public class Menu extends Activity{
 
                 Intent MyLocation = new Intent(menuActivity, fmt.febuweather.MyLocation.class);
                 menuActivity.startActivity(MyLocation);
-                menuActivity.finish();
+
                 break;
 
             case 1:
 
                 Intent OtherLocations = new Intent(menuActivity, fmt.febuweather.OtherLocations.class);
                 menuActivity.startActivity(OtherLocations);
-                menuActivity.finish();
                 break;
 
             case 2:
 
-                Intent Settings = new Intent(menuActivity, fmt.febuweather.Settings.class);
-                menuActivity.startActivity(Settings);
-                menuActivity.finish();
+                Intent Gallery = new Intent(menuActivity, fmt.febuweather.Gallery.class);
+                menuActivity.startActivity(Gallery);
                 break;
 
             case 3:
 
-                Intent Gallery = new Intent(menuActivity, fmt.febuweather.Gallery.class);
-                menuActivity.startActivity(Gallery);
-                menuActivity.finish();
+                Intent Settings = new Intent(menuActivity, fmt.febuweather.Settings.class);
+                menuActivity.startActivity(Settings);
                 break;
 
             case 4:
 
                 Intent ContactUs = new Intent(menuActivity, fmt.febuweather.ContactUs.class);
                 menuActivity.startActivity(ContactUs);
-                menuActivity.finish();
-                break;
-
-            case 5:
-
-                String appPackageName = menuActivity.getPackageName();
-
-                try {
-
-                    menuActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-
-                } catch (android.content.ActivityNotFoundException anfe) {
-
-                    menuActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-
-                }
-
-                break;
-
-            case 6:
-
-                String appDeveloperId = "8919005167984199925";
-
-                try {
-
-                    menuActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://dev?id=" + appDeveloperId)));
-
-                } catch (android.content.ActivityNotFoundException anfe) {
-
-                    menuActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=" + appDeveloperId)));
-
-                }
-
-                break;
-
-            case 7:
-
-                menuActivity.finish();
-
                 break;
 
             default:
@@ -236,17 +187,11 @@ public class Menu extends Activity{
 
 
     public void onBackPressed() {
-
         if (getFragmentManager().getBackStackEntryCount() > 0) {
-
             getFragmentManager().popBackStack();
-
         } else {
-
             super.onBackPressed();
-
         }
-
     }
 
 }

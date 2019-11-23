@@ -28,6 +28,7 @@
             android:background="@drawable/me_other_locations"/>
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -64,8 +65,8 @@
             android:paddingStart="10dp"
             android:paddingLeft="10dp"
             android:paddingBottom="10dp"
-            android:paddingEnd="65dp"
-            android:paddingRight="65dp"
+            android:paddingEnd="45dp"
+            android:paddingRight="45dp"
             android:inputType="textCapWords"
             android:textStyle="bold"
             android:background="@color/colorPrimaryTransparent77"
@@ -76,16 +77,6 @@
             android:hint="@string/ml_enter_location" />
 
         <ImageButton
-            android:id="@+id/ol_enter_location_cancel"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center|end"
-            android:background="@drawable/app_cancel"
-            android:layout_marginRight="40dp"
-            android:layout_marginEnd="40dp"
-            android:contentDescription="@null" />
-
-        <ImageButton
             android:id="@+id/ol_add_location"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -93,7 +84,7 @@
             android:layout_gravity="center|end"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/app_save" />
+            android:background="@drawable/ol_enter_location" />
 
     </FrameLayout>
 
@@ -104,8 +95,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         ads:adSize="BANNER"
-        android:layout_margin="10dp"
-        ads:adUnitId="@string/ol_admob_banner">
+        android:layout_margin="20dp"
+        ads:adUnitId="@string/admob_banner_other_locations">
     </com.google.android.gms.ads.AdView>
 
     <android.support.v7.widget.RecyclerView

@@ -4,15 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
@@ -35,11 +28,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 import fmt.febuweather.R;
 
@@ -73,23 +63,23 @@ public class AlarmProvider extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_provider);
 
-        AP_TIME = findViewById(R.id.ap_time);
-        AP_LOCATION = findViewById(R.id.ap_location);
-        AP_DATE = findViewById(R.id.ap_date);
-        AP_TEMPERATURE = findViewById(R.id.ap_temperature);
-        AP_ICON = findViewById(R.id.ap_icon);
-        AP_DESCRIPTION = findViewById(R.id.ap_description);
-        AP_HUMIDITY = findViewById(R.id.ap_humidity);
-        AP_PRESSURE = findViewById(R.id.ap_pressure);
-        AP_MINMAXTEMP = findViewById(R.id.ap_minmaxtemp);
-        AP_WIND_SPEED = findViewById(R.id.ap_wind_speed);
-        AP_WIND_ANGLE = findViewById(R.id.ap_wind_angle);
-        AP_LABEL = findViewById(R.id.ap_label);
+        AP_TIME = (TextView) findViewById(R.id.ap_time);
+        AP_LOCATION = (TextView) findViewById(R.id.ap_location);
+        AP_DATE = (TextView) findViewById(R.id.ap_date);
+        AP_TEMPERATURE = (TextView) findViewById(R.id.ap_temperature);
+        AP_ICON = (TextView) findViewById(R.id.ap_icon);
+        AP_DESCRIPTION = (TextView) findViewById(R.id.ap_description);
+        AP_HUMIDITY = (TextView) findViewById(R.id.ap_humidity);
+        AP_PRESSURE = (TextView) findViewById(R.id.ap_pressure);
+        AP_MINMAXTEMP = (TextView) findViewById(R.id.ap_minmaxtemp);
+        AP_WIND_SPEED = (TextView) findViewById(R.id.ap_wind_speed);
+        AP_WIND_ANGLE = (TextView) findViewById(R.id.ap_wind_angle);
+        AP_LABEL = (TextView) findViewById(R.id.ap_label);
 
-        AP_FORECAST_DETAILS = findViewById(R.id.ap_forecast_details);
+        AP_FORECAST_DETAILS = (LinearLayout) findViewById(R.id.ap_forecast_details);
 
-        AP_SNOOZE = findViewById(R.id.ap_snooze);
-        AP_DISMISS = findViewById(R.id.ap_dismiss);
+        AP_SNOOZE = (Button) findViewById(R.id.ap_snooze);
+        AP_DISMISS = (Button) findViewById(R.id.ap_dismiss);
 
         basicFunctions = new BasicFunctions(AlarmProvider.this);
 
@@ -204,31 +194,67 @@ public class AlarmProvider extends AppCompatActivity {
         SQL_DB.close();
 
 
-        if (!(ActivityCompat.checkSelfPermission(AlarmProvider.this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(AlarmProvider.this,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+        SQL_DB = mOpenHelper.getReadableDatabase();
 
-            if (basicFunctions.isConnectingToInternet())
-                getLocation();
+        String SQL_CREATE = "CREATE TABLE IF NOT EXISTS '" + basicFunctions.MY_LOCATIONS_TABLE + "' ( '"
+                + basicFunctions.LOCATION_NAME + "' TEXT NOT NULL, '"
+                + basicFunctions.LOCATION_LATITUDE + "' TEXT NOT NULL, '"
+                + basicFunctions.LOCATION_LONGITUDE + "' TEXT NOT NULL );";
+
+        SQL_DB.execSQL(SQL_CREATE);
+
+        String SQL_SELECT = "SELECT * FROM " + basicFunctions.MY_LOCATIONS_TABLE + " LIMIT 1";
+
+        DB_CURSOR = SQL_DB.rawQuery(SQL_SELECT, new String[]{});
+
+        if (DB_CURSOR.moveToFirst()) {
+
+            MY_LOCATION = DB_CURSOR.getString(0);
+            MY_LOCATION_LATITUDE = DB_CURSOR.getString(1);
+            MY_LOCATION_LONGITUDE = DB_CURSOR.getString(2);
+
+            AP_LOCATION.setVisibility(View.VISIBLE);
+            AP_LOCATION.setText(MY_LOCATION);
+
+            setUpAlarm();
+
+            if(basicFunctions.isConnectingToInternet()) {
+
+                AP_FORECAST_DETAILS.setVisibility(View.VISIBLE);
+
+                new GetCurrentForecastTask().execute();
+
+            }
 
             else
-                setUpAlarm();
+                AP_FORECAST_DETAILS.setVisibility(View.GONE);
+        }
+
+        else {
+
+            AP_LOCATION.setVisibility(View.GONE);
+
+            AP_FORECAST_DETAILS.setVisibility(View.GONE);
+
+            setUpAlarm();
 
         }
 
-        else
-            setUpAlarm();
+        DB_CURSOR.close();
+
+        SQL_DB.close();
 
 
         AP_SNOOZE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(Build.VERSION.SDK_INT >= 21) {
+                if(Build.VERSION.SDK_INT >= 21)
+                {
                     finishAndRemoveTask();
                 }
-                else {
+                else
+                {
                     finish();
                 }
 
@@ -246,7 +272,6 @@ public class AlarmProvider extends AppCompatActivity {
 
                 long time = calendar.getTimeInMillis();
 
-                assert alarmManager != null;
                 alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
 
             }
@@ -272,79 +297,11 @@ public class AlarmProvider extends AppCompatActivity {
                 AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 Intent notIntent = new Intent(AlarmProvider.this, AlarmReceiver.class);
                 PendingIntent notPendingIntent = PendingIntent.getBroadcast(AlarmProvider.this, 99993, notIntent, 0);
-                assert notAlarmManager != null;
                 notAlarmManager.cancel(notPendingIntent);
                 notPendingIntent.cancel();
 
             }
         });
-
-    }
-
-
-    @SuppressLint("MissingPermission")
-    private void getLocation(){
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        assert locationManager != null;
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, new Listener());
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, new Listener());
-
-        android.location.Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        if (location == null)
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        setDetails(location);
-
-        new GetCurrentForecastTask().execute();
-
-        setUpAlarm();
-
-    }
-
-
-    private void setDetails(android.location.Location location){
-
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
-        MY_LOCATION_LATITUDE = String.valueOf(location.getLatitude());
-
-        MY_LOCATION_LONGITUDE = String.valueOf(location.getLongitude());
-
-        List<Address> addresses = null;
-
-        try {
-
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
-
-        assert addresses != null;
-
-        MY_LOCATION = addresses.get(0).getLocality();
-
-        AP_LOCATION.setVisibility(View.VISIBLE);
-        AP_LOCATION.setText(MY_LOCATION);
-
-        AP_FORECAST_DETAILS.setVisibility(View.VISIBLE);
-
-    }
-
-
-    private class Listener implements LocationListener {
-
-        public void onLocationChanged(android.location.Location location) {}
-        public void onProviderDisabled(String provider){}
-        public void onProviderEnabled(String provider){}
-        public void onStatusChanged(String provider, int status, Bundle extras){}
 
     }
 
@@ -374,7 +331,6 @@ public class AlarmProvider extends AppCompatActivity {
                     AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                     Intent notIntent = new Intent(AlarmProvider.this, AlarmReceiver.class);
                     PendingIntent notPendingIntent = PendingIntent.getBroadcast(AlarmProvider.this, 99993, notIntent, 0);
-                    assert notAlarmManager != null;
                     notAlarmManager.cancel(notPendingIntent);
                     notPendingIntent.cancel();
 
@@ -401,7 +357,6 @@ public class AlarmProvider extends AppCompatActivity {
 
                 Vibrator vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 
-                assert vibrator != null;
                 vibrator.vibrate(pattern, -1);
 
             }
@@ -414,7 +369,7 @@ public class AlarmProvider extends AppCompatActivity {
 
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd | MM");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, d / M");
 
         AP_TIME.setText(timeFormat.format(c.getTime()));
 
@@ -429,17 +384,16 @@ public class AlarmProvider extends AppCompatActivity {
         String sno_dur_text;
 
         if(SNO_DURATION == 60000)
-            sno_dur_text = "SNOOZE 1 MINUTE";
+            sno_dur_text = "SNOOZE 1 MINUTE !";
 
         else
-            sno_dur_text = "SNOOZE " + (SNO_DURATION / 60000) + " MINUTES";
+            sno_dur_text = "SNOOZE " + (SNO_DURATION / 60000) + " MINUTES !";
 
         AP_SNOOZE.setText(sno_dur_text);
 
     }
 
 
-    @SuppressLint("StaticFieldLeak")
     private class GetCurrentForecastTask extends AsyncTask<String, Void, JSONObject> {
 
         private GetCurrentForecastTask() {}

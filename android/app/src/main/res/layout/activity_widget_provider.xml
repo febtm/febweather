@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -26,7 +25,7 @@
             android:weightSum="3">
 
             <TextView
-                android:id="@+id/wp_location"
+                android:id="@+id/wi_location"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
@@ -39,7 +38,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/wp_time"
+                android:id="@+id/wi_time"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
@@ -51,7 +50,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/wp_date"
+                android:id="@+id/wi_date"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -63,7 +62,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/wp_forecast_details"
+            android:id="@+id/wi_forecast_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -83,8 +82,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -93,7 +91,7 @@
                     android:contentDescription="@null" />
 
                 <TextView
-                    android:id="@+id/wp_temperature"
+                    android:id="@+id/wi_temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -106,7 +104,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/wp_description"
+                android:id="@+id/wi_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -124,7 +122,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/colorSecondary" />
+            android:background="@color/colorPrimary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,8 +139,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -151,7 +148,7 @@
                     android:contentDescription="@null" />
 
                 <TextView
-                    android:id="@+id/wp_humidity"
+                    android:id="@+id/wi_humidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -170,8 +167,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -180,7 +176,7 @@
                     android:contentDescription="@null" />
 
                 <TextView
-                    android:id="@+id/wp_pressure"
+                    android:id="@+id/wi_pressure"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -197,8 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -207,7 +202,7 @@
                     android:contentDescription="@null" />
 
                 <TextView
-                    android:id="@+id/wp_maxmintemp"
+                    android:id="@+id/wi_maxmintemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -228,7 +223,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/colorSecondary" />
+            android:background="@color/colorPrimary" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -252,8 +247,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    tools:ignore="UseCompoundDrawables">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -262,7 +256,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        android:id="@+id/wp_wind_speed"
+                        android:id="@+id/wi_wind_speed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -279,8 +273,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    tools:ignore="UseCompoundDrawables">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -289,7 +282,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        android:id="@+id/wp_wind_angle"
+                        android:id="@+id/wi_wind_angle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -304,13 +297,13 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/wp_location_details_refresh"
+                android:id="@+id/wi_location_details_refresh"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="end|center"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/wp_refresh"
+                android:background="@drawable/wi_refresh"
                 android:contentDescription="@null" />
 
         </FrameLayout>
@@ -320,14 +313,14 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/wp_no_network"
+        android:id="@+id/wi_no_network"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorSecondaryTransparent77"
         android:visibility="gone">
 
         <Button
-            android:id="@+id/wp_no_network_button"
+            android:id="@+id/wi_no_network_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -339,45 +332,45 @@
             android:textSize="14sp" />
 
         <ImageButton
-            android:id="@+id/wp_no_network_refresh"
+            android:id="@+id/wi_no_network_refresh"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:contentDescription="@null"
             android:layout_marginRight="5dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/wp_refresh"
+            android:background="@drawable/wi_refresh"
             android:layout_gravity="end|center"/>
 
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/wp_no_location_permission"
+        android:id="@+id/wi_no_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorSecondaryTransparent77"
         android:visibility="gone">
 
         <Button
-            android:id="@+id/wp_no_location_permission_button"
+            android:id="@+id/wi_no_location_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:text="@string/wi_no_location"
+            android:textColor="@color/colorSecondary"
             android:background="@android:color/transparent"
             android:padding="10dp"
-            android:text="@string/wi_no_location_permission"
-            android:textColor="@color/colorSecondary"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="14sp" />
 
         <ImageButton
-            android:id="@+id/wp_no_location_permission_refresh"
+            android:id="@+id/wi_no_location_refresh"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_gravity="end|center"
-            android:layout_marginEnd="5dp"
+            android:contentDescription="@null"
             android:layout_marginRight="5dp"
-            android:background="@drawable/wp_refresh"
-            android:contentDescription="@null" />
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/wi_refresh"
+            android:layout_gravity="end|center"/>
 
     </FrameLayout>
 

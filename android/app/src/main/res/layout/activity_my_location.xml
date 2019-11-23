@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -56,11 +55,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:baselineAligned="false"
-        android:background="@color/colorPrimaryTransparent77"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="30dp"
+        android:background="@color/colorSecondaryTransparent77"
+        android:layout_margin="10dp"
         android:weightSum="2">
 
         <LinearLayout
@@ -69,8 +65,7 @@
             android:orientation="vertical"
             android:gravity="center"
             android:padding="5dp"
-            android:layout_weight="1"
-            tools:ignore="UseCompoundDrawables">
+            android:layout_weight="1">
 
             <ImageView
                 android:layout_width="100dp"
@@ -83,20 +78,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorSecondary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_marginTop="20dp"
-                android:textStyle="bold|italic"
+                android:textStyle="bold"
                 android:text="@string/app_name"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ml_forecast_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
+            android:visibility="visible"
             android:padding="5dp"
-            android:background="@color/colorSecondaryTransparent77"
+            android:background="@color/colorPrimaryTransparent77"
             android:gravity="center">
 
             <TextView
@@ -134,8 +131,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -161,8 +157,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="20dp"
@@ -188,8 +183,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="20dp"
@@ -214,30 +208,70 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/ml_l_location"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp">
+
+        <EditText
+            android:id="@+id/ml_enter_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="45dp"
+            android:paddingRight="45dp"
+            android:textStyle="bold"
+            android:inputType="textCapWords"
+            android:background="@color/colorPrimaryTransparent77"
+            android:textSize="15sp"
+            android:textColor="@color/colorSecondary"
+            android:textColorHint="@color/colorSecondary"
+            android:layout_gravity="center|start"
+            android:hint="@string/ml_enter_location" />
+
+        <ImageButton
+            android:id="@+id/ml_add_location"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@null"
+            android:layout_gravity="center|end"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/ol_enter_location" />
+
+    </FrameLayout>
+
     <com.google.android.gms.ads.AdView
         android:id="@+id/ml_adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         ads:adSize="BANNER"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="30dp"
-        ads:adUnitId="@string/ml_admob_banner">
+        android:layout_margin="20dp"
+        ads:adUnitId="@string/admob_banner_my_location">
     </com.google.android.gms.ads.AdView>
 
     <LinearLayout
+        android:id="@+id/ml_forecast_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_margin="10dp"
         android:weightSum="2">
 
     <TextView
@@ -265,16 +299,15 @@
         android:id="@+id/ml_hourly_forecast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryTransparent77"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="30dp"/>
+        android:background="@color/colorSecondaryTransparent77"
+        android:layout_margin="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:weightSum="2">
@@ -306,9 +339,7 @@
         android:orientation="horizontal"
         android:baselineAligned="false"
         android:background="@color/colorPrimaryTransparent77"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="30dp"
+        android:layout_margin="10dp"
         android:weightSum="2">
 
         <LinearLayout
@@ -329,8 +360,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -381,8 +411,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -441,8 +470,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -493,8 +521,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    tools:ignore="UseCompoundDrawables">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -542,7 +569,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
 
@@ -571,7 +599,8 @@
         android:id="@+id/ml_daily_forecast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSecondaryTransparent77"
+        android:background="@color/colorPrimaryTransparent77"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="20dp"/>

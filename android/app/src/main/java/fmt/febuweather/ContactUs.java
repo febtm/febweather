@@ -1,17 +1,22 @@
 package fmt.febuweather;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -35,13 +40,13 @@ import fmt.febuweather.helper.Menu;
 public class ContactUs extends AppCompatActivity {
 
 
+    LinearLayout CU_SEND_MESSAGE, CU_RATE_US, CU_FIND_US;
+
     String cu_email, cu_name, cu_subject, cu_message;
 
     EditText CU_NAME, CU_EMAIL, CU_SUBJECT, CU_MESSAGE;
 
-    Button B_SEND_MESSAGE;
-
-    ImageButton MENU_BUTTON, B_NAME_CANCEL, B_EMAIL_CANCEL, B_SUBJECT_CANCEL, B_MESSAGE_CANCEL;
+    ImageButton MENU_BUTTON;
 
     private BasicFunctions basicFunctions;
 
@@ -53,9 +58,35 @@ public class ContactUs extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Window window = this.getWindow();
+
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+
+        }
+
         menu = new Menu(ContactUs.this);
 
-        MENU_BUTTON = findViewById(R.id.cu_menu);
+        basicFunctions = new BasicFunctions(ContactUs.this);
+
+        CU_NAME = (EditText) findViewById(R.id.cu_full_name);
+        CU_EMAIL = (EditText) findViewById(R.id.cu_email_id);
+        CU_SUBJECT = (EditText) findViewById(R.id.cu_subject);
+        CU_MESSAGE =(EditText)findViewById(R.id.cu_message);
+        CU_SEND_MESSAGE = (LinearLayout) findViewById(R.id.cu_send_message);
+        CU_RATE_US = (LinearLayout) findViewById(R.id.cu_rate_us);
+        CU_FIND_US = (LinearLayout) findViewById(R.id.cu_find_us);
+        MENU_BUTTON = (ImageButton) findViewById(R.id.cu_menu);
+
+
+        AdView mAdView = (AdView) findViewById(R.id.cu_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         MENU_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,61 +96,8 @@ public class ContactUs extends AppCompatActivity {
             }
         });
 
-        basicFunctions = new BasicFunctions(ContactUs.this);
 
-        CU_NAME = findViewById(R.id.cu_name);
-        CU_EMAIL = findViewById(R.id.cu_email);
-        CU_SUBJECT = findViewById(R.id.cu_subject);
-        CU_MESSAGE = findViewById(R.id.cu_message);
-
-        AdView mAdView = findViewById(R.id.cu_adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
-        B_NAME_CANCEL = findViewById(R.id.cu_name_cancel);
-        B_EMAIL_CANCEL = findViewById(R.id.cu_email_cancel);
-        B_SUBJECT_CANCEL = findViewById(R.id.cu_subject_cancel);
-        B_MESSAGE_CANCEL = findViewById(R.id.cu_message_cancel);
-
-        B_SEND_MESSAGE = findViewById(R.id.cu_send_message);
-
-        B_NAME_CANCEL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                CU_NAME.setText("");
-
-            }
-        });
-
-        B_EMAIL_CANCEL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                CU_EMAIL.setText("");
-
-            }
-        });
-
-        B_SUBJECT_CANCEL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                CU_SUBJECT.setText("");
-
-            }
-        });
-
-        B_MESSAGE_CANCEL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                CU_MESSAGE.setText("");
-
-            }
-        });
-
-        B_SEND_MESSAGE.setOnClickListener(new View.OnClickListener() {
+        CU_SEND_MESSAGE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -193,6 +171,48 @@ public class ContactUs extends AppCompatActivity {
             }
         });
 
+
+        CU_RATE_US.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View view){
+
+                String appPackageName = getPackageName();
+
+                try {
+
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+
+                } catch (android.content.ActivityNotFoundException anfe) {
+
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+
+                }
+
+            }
+
+        });
+
+
+        CU_FIND_US.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View view){
+
+                String appDeveloperName = "Febin+M+Thomas";
+
+                try {
+
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://developer?id=" + appDeveloperName)));
+
+                } catch (android.content.ActivityNotFoundException anfe) {
+
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=" + appDeveloperName)));
+
+                }
+
+            }
+
+        });
+
     }
 
 
@@ -202,7 +222,7 @@ public class ContactUs extends AppCompatActivity {
 
         subject = temp_name + " : " + temp_subject;
 
-        message1 = "Application : FebWeather" + "\n\nName : " + temp_name + "\n\nEmail-Id : " + temp_email;
+        message1 = "Application : FebuWeather" + "\n\nName : " + temp_name + "\n\nEmail-Id : " + temp_email;
         message2 = "\n\nSubject : " + temp_subject + "\n\nMessage : " + temp_message;
 
         message = message1 + message2;
@@ -214,7 +234,6 @@ public class ContactUs extends AppCompatActivity {
     }
 
 
-    @SuppressLint("StaticFieldLeak")
     private class SendingEmailBackgroundTask extends AsyncTask<String, Void, String> {
 
         private ProgressDialog cu_loading;
@@ -258,18 +277,18 @@ public class ContactUs extends AppCompatActivity {
                 InputStream IS = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS, "iso-8859-1"));
 
-                StringBuilder response = new StringBuilder();
+                String response = "";
                 String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
-                    response.append(line);
+                    response += line;
                 }
 
                 bufferedReader.close();
                 httpURLConnection.disconnect();
                 IS.close();
 
-                return response.toString();
+                return response;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -289,7 +308,7 @@ public class ContactUs extends AppCompatActivity {
 
             switch (result) {
 
-                case "Thank You for your Message, kindly wait until our Team responds to it !":
+                case "Your Message has been sent : Kindly wait until our Team responds to your Message !":
 
                     Toast.makeText(ContactUs.this, result, Toast.LENGTH_LONG).show();
 

@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,7 +43,7 @@ public class Settings extends AppCompatActivity {
 
     Switch UNIT_TEMP_SWITCH, UNIT_WIND_SWITCH, NOT_MOR_SWITCH, NOT_AFT_SWITCH, NOT_EVE_SWITCH, ALA_VIB_SWITCH;
 
-    ImageButton MENU_BUTTON, SE_AL_LABEL_CANCEL, NOT_MOR_MINUS, NOT_MOR_PLUS, NOT_AFT_MINUS, NOT_AFT_PLUS,
+    ImageButton MENU_BUTTON, NOT_MOR_MINUS, NOT_MOR_PLUS, NOT_AFT_MINUS, NOT_AFT_PLUS,
                 NOT_EVE_MINUS, NOT_EVE_PLUS, ALA_ADD, ALA_LAB_SET, ALA_DUR_MINUS, ALA_DUR_PLUS,
                 ALA_SNO_MINUS, ALA_SNO_PLUS, ALA_SET, ALA_CANCEL;
 
@@ -79,69 +78,59 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        MENU_BUTTON = findViewById(R.id.se_menu);
-        UNIT_TEMP_SWITCH = findViewById(R.id.se_unit_temp_switch);
-        UNIT_WIND_SWITCH = findViewById(R.id.se_unit_wind_speed_switch);
+        MENU_BUTTON = (ImageButton) findViewById(R.id.se_menu);
+        UNIT_TEMP_SWITCH = (Switch) findViewById(R.id.se_unit_temp_switch);
+        UNIT_WIND_SWITCH = (Switch) findViewById(R.id.se_unit_wind_speed_switch);
 
-        NOT_MOR_SWITCH = findViewById(R.id.se_not_mor_switch);
-        NOT_AFT_SWITCH = findViewById(R.id.se_not_aft_switch);
-        NOT_EVE_SWITCH = findViewById(R.id.se_not_eve_switch);
+        NOT_MOR_SWITCH = (Switch) findViewById(R.id.se_not_mor_switch);
+        NOT_AFT_SWITCH = (Switch) findViewById(R.id.se_not_aft_switch);
+        NOT_EVE_SWITCH = (Switch) findViewById(R.id.se_not_eve_switch);
 
-        NOT_MOR_MINUS = findViewById(R.id.se_not_mor_minus);
-        NOT_MOR_PLUS = findViewById(R.id.se_not_mor_plus);
+        NOT_MOR_MINUS = (ImageButton) findViewById(R.id.se_not_mor_minus);
+        NOT_MOR_PLUS = (ImageButton) findViewById(R.id.se_not_mor_plus);
 
-        NOT_AFT_MINUS = findViewById(R.id.se_not_aft_minus);
-        NOT_AFT_PLUS = findViewById(R.id.se_not_aft_plus);
+        NOT_AFT_MINUS = (ImageButton) findViewById(R.id.se_not_aft_minus);
+        NOT_AFT_PLUS = (ImageButton) findViewById(R.id.se_not_aft_plus);
 
-        NOT_EVE_MINUS = findViewById(R.id.se_not_eve_minus);
-        NOT_EVE_PLUS = findViewById(R.id.se_not_eve_plus);
+        NOT_EVE_MINUS = (ImageButton) findViewById(R.id.se_not_eve_minus);
+        NOT_EVE_PLUS = (ImageButton) findViewById(R.id.se_not_eve_plus);
 
-        NOT_MOR_TEXT = findViewById(R.id.se_not_mor_time);
-        NOT_AFT_TEXT = findViewById(R.id.se_not_aft_time);
-        NOT_EVE_TEXT = findViewById(R.id.se_not_eve_time);
+        NOT_MOR_TEXT = (TextView) findViewById(R.id.se_not_mor_time);
+        NOT_AFT_TEXT = (TextView) findViewById(R.id.se_not_aft_time);
+        NOT_EVE_TEXT = (TextView) findViewById(R.id.se_not_eve_time);
 
-        ALA_ADD = findViewById(R.id.se_al_add_alarm);
+        ALA_ADD = (ImageButton) findViewById(R.id.se_al_add_alarm);
 
-        ALA_DUR_MINUS = findViewById(R.id.se_al_dur_minus);
-        ALA_DUR_PLUS = findViewById(R.id.se_al_dur_plus);
+        ALA_DUR_MINUS = (ImageButton) findViewById(R.id.se_al_dur_minus);
+        ALA_DUR_PLUS = (ImageButton) findViewById(R.id.se_al_dur_plus);
 
-        ALA_LAB_SET = findViewById(R.id.se_al_set_label);
-        ALA_LAB_TEXT = findViewById(R.id.se_al_label);
-        SE_AL_LABEL_CANCEL = findViewById(R.id.se_al_label_cancel);
+        ALA_LAB_SET = (ImageButton) findViewById(R.id.se_al_set_label);
+        ALA_LAB_TEXT = (EditText) findViewById(R.id.se_al_label);
 
-        SE_AL_LABEL_CANCEL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        ALA_SNO_MINUS = (ImageButton) findViewById(R.id.se_al_sno_minus);
+        ALA_SNO_PLUS = (ImageButton) findViewById(R.id.se_al_sno_plus);
 
-                ALA_LAB_TEXT.setText("");
+        ALA_VIB_SWITCH = (Switch) findViewById(R.id.se_al_vibration_switch);
 
-            }
-        });
+        ALA_DUR_TEXT = (TextView) findViewById(R.id.se_al_dur_time);
+        ALA_SNO_TEXT = (TextView) findViewById(R.id.se_al_sno_time);
 
-        ALA_SNO_MINUS = findViewById(R.id.se_al_sno_minus);
-        ALA_SNO_PLUS = findViewById(R.id.se_al_sno_plus);
+        LL_AL_SETTINGS = (LinearLayout) findViewById(R.id.se_al_settings);
+        LL_ALL_SETTINGS = (LinearLayout) findViewById(R.id.se_all_settings);
 
-        ALA_VIB_SWITCH = findViewById(R.id.se_al_vibration_switch);
+        ALA_SET = (ImageButton) findViewById(R.id.se_al_set_alarm);
 
-        ALA_DUR_TEXT = findViewById(R.id.se_al_dur_time);
-        ALA_SNO_TEXT = findViewById(R.id.se_al_sno_time);
+        ALA_CANCEL = (ImageButton) findViewById(R.id.se_al_cancel_alarm);
 
-        LL_AL_SETTINGS = findViewById(R.id.se_al_settings);
-        LL_ALL_SETTINGS = findViewById(R.id.se_all_settings);
+        ALA_SUNDAY = (CheckBox) findViewById(R.id.se_al_set_sunday);
+        ALA_MONDAY = (CheckBox) findViewById(R.id.se_al_set_monday);
+        ALA_TUESDAY = (CheckBox) findViewById(R.id.se_al_set_tuesday);
+        ALA_WEDNESDAY = (CheckBox) findViewById(R.id.se_al_set_wednesday);
+        ALA_THURSDAY = (CheckBox) findViewById(R.id.se_al_set_thursday);
+        ALA_FRIDAY = (CheckBox) findViewById(R.id.se_al_set_friday);
+        ALA_SATURDAY = (CheckBox) findViewById(R.id.se_al_set_saturday);
 
-        ALA_SET = findViewById(R.id.se_al_set_alarm);
-
-        ALA_CANCEL = findViewById(R.id.se_al_cancel_alarm);
-
-        ALA_SUNDAY = findViewById(R.id.se_al_set_sunday);
-        ALA_MONDAY = findViewById(R.id.se_al_set_monday);
-        ALA_TUESDAY = findViewById(R.id.se_al_set_tuesday);
-        ALA_WEDNESDAY = findViewById(R.id.se_al_set_wednesday);
-        ALA_THURSDAY = findViewById(R.id.se_al_set_thursday);
-        ALA_FRIDAY = findViewById(R.id.se_al_set_friday);
-        ALA_SATURDAY = findViewById(R.id.se_al_set_saturday);
-
-        ALA_TIMEPICKER = findViewById(R.id.se_al_set_timepicker);
+        ALA_TIMEPICKER = (TimePicker) findViewById(R.id.se_al_set_timepicker);
 
         ALA_TIMEPICKER.setIs24HourView(true);
 
@@ -159,7 +148,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        mAlarmRecyclerView = findViewById(R.id.se_al_alarm_list);
+        mAlarmRecyclerView = (RecyclerView) findViewById(R.id.se_al_alarm_list);
 
         mAlarmRecyclerView.setHasFixedSize(true);
         mAlarmLayoutManager = new LinearLayoutManager(this);
@@ -451,7 +440,7 @@ public class Settings extends AppCompatActivity {
         SQL_DB.close();
 
 
-        AdView mAdView = findViewById(R.id.se_adView);
+        AdView mAdView = (AdView) findViewById(R.id.se_adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -545,7 +534,6 @@ public class Settings extends AppCompatActivity {
                     AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                     Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                     PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, 99994, notIntent, 0);
-                    assert notAlarmManager != null;
                     notAlarmManager.cancel(notPendingIntent);
                     notPendingIntent.cancel();
 
@@ -698,7 +686,6 @@ public class Settings extends AppCompatActivity {
                     AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                     Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                     PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, 99995, notIntent, 0);
-                    assert notAlarmManager != null;
                     notAlarmManager.cancel(notPendingIntent);
                     notPendingIntent.cancel();
 
@@ -858,7 +845,6 @@ public class Settings extends AppCompatActivity {
                     AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                     Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                     PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, 99996, notIntent, 0);
-                    assert notAlarmManager != null;
                     notAlarmManager.cancel(notPendingIntent);
                     notPendingIntent.cancel();
 
@@ -1411,11 +1397,11 @@ public class Settings extends AppCompatActivity {
             DataHolder(final View itemView) {
                 super(itemView);
 
-                SE_AL_STATUS = itemView.findViewById(R.id.se_al_li_status);
-                SE_AL_TIME = itemView.findViewById(R.id.se_al_li_time);
-                SE_AL_DAYS = itemView.findViewById(R.id.se_al_li_days);
-                SE_AL_SWITCH = itemView.findViewById(R.id.se_al_li_switch);
-                SE_AL_DELETE = itemView.findViewById(R.id.se_al_li_delete);
+                SE_AL_STATUS = (ImageView) itemView.findViewById(R.id.ap_li_it_status);
+                SE_AL_TIME = (TextView) itemView.findViewById(R.id.ap_li_it_time);
+                SE_AL_DAYS = (TextView) itemView.findViewById(R.id.ap_li_it_days);
+                SE_AL_SWITCH = (Switch) itemView.findViewById(R.id.ap_li_it_switch);
+                SE_AL_DELETE = (ImageButton) itemView.findViewById(R.id.ap_li_it_delete);
 
             }
 
@@ -1425,11 +1411,10 @@ public class Settings extends AppCompatActivity {
             mDataset = myDataset;
         }
 
-        @NonNull
         @Override
-        public DataHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public DataHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_se_al_list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_alarm_provider_list_item, parent, false);
 
             mAlarmRecyclerView.setMinimumHeight(mAlarmRecyclerView.getHeight() + view.getHeight());
 
@@ -1438,7 +1423,7 @@ public class Settings extends AppCompatActivity {
 
         @SuppressWarnings("deprecation")
         @Override
-        public void onBindViewHolder(@NonNull final DataHolder holder, @SuppressLint("RecyclerView") final int position) {
+        public void onBindViewHolder(final DataHolder holder, final int position) {
 
             if(mDataset.get(holder.getAdapterPosition()).getSE_AL_STATUS() == 0){
 
@@ -1558,7 +1543,6 @@ public class Settings extends AppCompatActivity {
                                         AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                         Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                                         PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                                        assert notAlarmManager != null;
                                         notAlarmManager.cancel(notPendingIntent);
                                         notPendingIntent.cancel();
 
@@ -1571,7 +1555,6 @@ public class Settings extends AppCompatActivity {
                                         AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                         Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                                         PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                                        assert notAlarmManager != null;
                                         notAlarmManager.cancel(notPendingIntent);
                                         notPendingIntent.cancel();
 
@@ -1584,7 +1567,6 @@ public class Settings extends AppCompatActivity {
                                         AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                         Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                                         PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                                        assert notAlarmManager != null;
                                         notAlarmManager.cancel(notPendingIntent);
                                         notPendingIntent.cancel();
 
@@ -1597,7 +1579,6 @@ public class Settings extends AppCompatActivity {
                                         AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                         Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                                         PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                                        assert notAlarmManager != null;
                                         notAlarmManager.cancel(notPendingIntent);
                                         notPendingIntent.cancel();
 
@@ -1610,7 +1591,6 @@ public class Settings extends AppCompatActivity {
                                         AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                         Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                                         PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                                        assert notAlarmManager != null;
                                         notAlarmManager.cancel(notPendingIntent);
                                         notPendingIntent.cancel();
 
@@ -1623,7 +1603,6 @@ public class Settings extends AppCompatActivity {
                                         AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                         Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                                         PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                                        assert notAlarmManager != null;
                                         notAlarmManager.cancel(notPendingIntent);
                                         notPendingIntent.cancel();
 
@@ -1636,7 +1615,6 @@ public class Settings extends AppCompatActivity {
                                         AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                         Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                                         PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                                        assert notAlarmManager != null;
                                         notAlarmManager.cancel(notPendingIntent);
                                         notPendingIntent.cancel();
 
@@ -1737,7 +1715,6 @@ public class Settings extends AppCompatActivity {
                             AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                             PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                            assert notAlarmManager != null;
                             notAlarmManager.cancel(notPendingIntent);
                             notPendingIntent.cancel();
 
@@ -1750,7 +1727,6 @@ public class Settings extends AppCompatActivity {
                             AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                             PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                            assert notAlarmManager != null;
                             notAlarmManager.cancel(notPendingIntent);
                             notPendingIntent.cancel();
 
@@ -1763,7 +1739,6 @@ public class Settings extends AppCompatActivity {
                             AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                             PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                            assert notAlarmManager != null;
                             notAlarmManager.cancel(notPendingIntent);
                             notPendingIntent.cancel();
 
@@ -1776,7 +1751,6 @@ public class Settings extends AppCompatActivity {
                             AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                             PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                            assert notAlarmManager != null;
                             notAlarmManager.cancel(notPendingIntent);
                             notPendingIntent.cancel();
 
@@ -1789,7 +1763,6 @@ public class Settings extends AppCompatActivity {
                             AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                             PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                            assert notAlarmManager != null;
                             notAlarmManager.cancel(notPendingIntent);
                             notPendingIntent.cancel();
 
@@ -1802,7 +1775,6 @@ public class Settings extends AppCompatActivity {
                             AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                             PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                            assert notAlarmManager != null;
                             notAlarmManager.cancel(notPendingIntent);
                             notPendingIntent.cancel();
 
@@ -1815,7 +1787,6 @@ public class Settings extends AppCompatActivity {
                             AlarmManager notAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             Intent notIntent = new Intent(Settings.this, AlarmReceiver.class);
                             PendingIntent notPendingIntent = PendingIntent.getBroadcast(Settings.this, identifier, notIntent, 0);
-                            assert notAlarmManager != null;
                             notAlarmManager.cancel(notPendingIntent);
                             notPendingIntent.cancel();
 

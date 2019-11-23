@@ -1,35 +1,25 @@
 package fmt.febuweather.helper;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 import fmt.febuweather.MyLocation;
 import fmt.febuweather.R;
@@ -41,13 +31,18 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     BasicFunctions basicFunctions;
 
+    BasicFunctions.DatabaseHelper mOpenHelper;
+    SQLiteDatabase SQL_DB;
+    Cursor DB_CURSOR;
+
     Context mContext;
 
     String LOCATION, LATITUDE, LONGITUDE;
 
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent intent)
+    {
 
         this.mContext = context;
 
@@ -55,18 +50,27 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             basicFunctions = new BasicFunctions(mContext);
 
-            if (!(ActivityCompat.checkSelfPermission(mContext,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(mContext,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            mOpenHelper = new BasicFunctions.DatabaseHelper(mContext);
 
-                if (basicFunctions.isConnectingToInternet())
-                    getLocation();
+            SQL_DB = mOpenHelper.getReadableDatabase();
+
+            String SQL_SELECT = "SELECT * FROM " + basicFunctions.MY_LOCATIONS_TABLE + " LIMIT 1";
+
+            DB_CURSOR = SQL_DB.rawQuery(SQL_SELECT, new String[]{});
+
+            if (DB_CURSOR.moveToFirst()) {
+
+                LOCATION = DB_CURSOR.getString(0);
+                LATITUDE = DB_CURSOR.getString(1);
+                LONGITUDE = DB_CURSOR.getString(2);
+
+                if(basicFunctions.isConnectingToInternet())
+                    new GetCurrentForecastTask().execute();
 
                 else {
 
                     String message = "No Internet Connection | " +
-                            "Connect to the Internet to receive forecast updates of your Location !";
+                            "Connect to the Internet to receive Forecast Updates of " + LOCATION + " !";
 
                     setUpNotification(message);
 
@@ -76,8 +80,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             else {
 
-                String message = "Location Permission Not Granted | " +
-                        "Grant Location permission to receive forecast updates of your Location !";
+                String message = "Your Location List is empty | Click here to add a location !";
 
                 setUpNotification(message);
 
@@ -96,72 +99,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
 
-    @SuppressLint("MissingPermission")
-    private void getLocation(){
-
-        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-
-        assert locationManager != null;
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, new Listener());
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, new Listener());
-
-        android.location.Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        if (location == null)
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        setDetails(location);
-
-        new GetCurrentForecastTask().execute();
-
-    }
-
-
-    private void setDetails(android.location.Location location){
-
-        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
-
-        LATITUDE = String.valueOf(location.getLatitude());
-
-        LONGITUDE = String.valueOf(location.getLongitude());
-
-        List<Address> addresses = null;
-
-        try {
-
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
-
-        assert addresses != null;
-
-        LOCATION = addresses.get(0).getLocality();
-
-    }
-
-
-    private class Listener implements LocationListener {
-
-        public void onLocationChanged(android.location.Location location) {}
-        public void onProviderDisabled(String provider){}
-        public void onProviderEnabled(String provider){}
-        public void onStatusChanged(String provider, int status, Bundle extras){}
-
-    }
-
-
     private void setUpNotification(String message){
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, message)
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(mContext)
                         .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_logo_main))
                         .setSmallIcon(R.drawable.me_my_location)
-                        .setContentTitle("FebWeather")
+                        .setContentTitle("FebuWeather")
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                         .setContentText(message)
                         .setAutoCancel(true);
@@ -171,7 +115,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         builder.setContentIntent(contentIntent);
 
         NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        assert manager != null;
         manager.notify(0, builder.build());
 
         try {
@@ -182,7 +125,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             r.play();
 
             Vibrator v = (Vibrator) mContext.getSystemService(VIBRATOR_SERVICE);
-            assert v != null;
             v.vibrate(500);
 
         } catch (Exception e) {
@@ -192,7 +134,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
 
-    @SuppressLint("StaticFieldLeak")
     private class GetCurrentForecastTask extends AsyncTask<String, Void, JSONObject> {
 
         private GetCurrentForecastTask() {}
@@ -234,6 +175,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                     String message = temperature + " | " + description + " in " + LOCATION;
 
                     setUpNotification(message);
+
+                    DB_CURSOR.close();
+
+                    SQL_DB.close();
 
                 }
 

@@ -29,9 +29,9 @@ import java.util.List;
 
 import static android.content.Context.ALARM_SERVICE;
 
-//Created by Febin M Thomas on 04-May-17.
-//Created by Febin M Thomas on 21-May-18.
-
+/*
+* Created by Febin M Thomas on 04-May-17.
+*/
 
 public class BasicFunctions {
 
@@ -51,10 +51,10 @@ public class BasicFunctions {
     public static Typeface weatherFont;
 
 
-    public static final String SEND_EMAIL = "https://febtech.000webhostapp.com/android_febweather/sendEmail.php";
+    public static final String SEND_EMAIL = "http://www.febulous.esy.es/android_febuweather/sendEmail.php";
 
 
-    private static final String DATABASE_NAME = "febweather.db";
+    private static final String DATABASE_NAME = "febuweather.db";
     private static final int DATABASE_VERSION = 1;
 
     public String MY_LOCATIONS_TABLE = "my_locations";
@@ -88,7 +88,6 @@ public class BasicFunctions {
     public String ALARM_FRIDAY = "alarm_friday";
     public String ALARM_SATURDAY = "alarm_saturday";
 
-
     public BasicFunctions(Context context){
 
         mContext = context;
@@ -106,14 +105,14 @@ public class BasicFunctions {
 
     public double metresPerSecondToKilometresPerHour(double metresPerSecond)
     {
-        return round((metresPerSecond * 3.6));
+        return round((metresPerSecond * 3.6), 2);
     }
 
 
-    private double round(double value) {
+    private double round(double value, int places) {
 
         BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
 
         return bd.doubleValue();
 
@@ -121,6 +120,8 @@ public class BasicFunctions {
 
 
     public void setUpNotification(int id, int hour){
+
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -133,18 +134,22 @@ public class BasicFunctions {
 
         long time = (calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
 
-        if(System.currentTimeMillis()>time) {
-            time = time + (1000*60*60*24);
+        if(System.currentTimeMillis()>time)
+        {
+            if (calendar.AM_PM == 0)
+                time = time + (1000*60*60*12);
+            else
+                time = time + (1000*60*60*24);
         }
 
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
-        assert alarmManager != null;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
 
     }
 
 
     public void setUpAlarm(int id, int hour, int minute, int day){
+
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -184,9 +189,7 @@ public class BasicFunctions {
 
         long time = calendar.getTimeInMillis();
 
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
-        assert alarmManager != null;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time,AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
 
     }
 
@@ -312,7 +315,6 @@ public class BasicFunctions {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            assert connectivityManager != null;
             Network[] networks = connectivityManager.getAllNetworks();
             NetworkInfo networkInfo;
 

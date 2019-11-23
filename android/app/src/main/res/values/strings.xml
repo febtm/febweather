@@ -1,33 +1,25 @@
 <resources>
 
-    <string name="app_name">FebWeather</string>
+    <string name="app_name">FebuWeather</string>
 
     <string name="facebook_app_id">452605265081922</string>
 
-
-    <string name="wi_no_location_permission">Location Permission Not Granted\n\Grant it and try again !</string>
+    <string name="wi_no_location">Your Location List is empty\n\nClick here to add a location !</string>
 
     <string name="wi_no_network">No Internet Connection\n\nClick here to try again !</string>
 
-
-    <string name="ap_dismiss">Dismiss</string>
-
-    <string name="ap_time">Time</string>
-
-    <string name="ap_location">Location</string>
-
-    <string name="ap_date">Date</string>
+    <string name="ap_dismiss">Dismiss !</string>
 
 
-    <string name="ml_admob_banner">ca-app-pub-6196885651315287/6066562253</string>
+    <string name="admob_banner_my_location">ca-app-pub-6196885651315287/6066562253</string>
 
-    <string name="ol_admob_banner">ca-app-pub-6196885651315287/9020028650</string>
+    <string name="admob_banner_other_locations">ca-app-pub-6196885651315287/9020028650</string>
 
-    <string name="ga_admob_banner">ca-app-pub-6196885651315287/1496761856</string>
+    <string name="admob_banner_gallery">ca-app-pub-6196885651315287/1496761856</string>
 
-    <string name="cu_admob_banner">ca-app-pub-6196885651315287/4450228259</string>
+    <string name="admob_banner_settings">ca-app-pub-6196885651315287/2973495055</string>
 
-    <string name="se_admob_banner">ca-app-pub-6196885651315287/2973495055</string>
+    <string name="admob_banner_contact_us">ca-app-pub-6196885651315287/4450228259</string>
 
 
     <string name="menu">Menu</string>
@@ -35,23 +27,17 @@
     <string-array name="menu_titles">
         <item>My Location</item>
         <item>Other Locations</item>
-        <item>Settings</item>
         <item>Gallery</item>
+        <item>Settings</item>
         <item>Contact Us</item>
-        <item>Rate Us</item>
-        <item>Find Us</item>
-        <item>Exit</item>
     </string-array>
 
     <array name="menu_icons">
         <item>@drawable/me_my_location</item>
         <item>@drawable/me_other_locations</item>
-        <item>@drawable/me_settings</item>
         <item>@drawable/me_gallery</item>
+        <item>@drawable/me_settings</item>
         <item>@drawable/me_contact_us</item>
-        <item>@drawable/me_rate_us</item>
-        <item>@drawable/me_find_us</item>
-        <item>@drawable/me_exit</item>
     </array>
 
 
@@ -132,6 +118,8 @@
 
     <string name="se_alarm_settings">Alarm Settings</string>
 
+    <string name="se_al_set_ringtone">Set Ringtone !</string>
+
     <string name="se_al_set_label">Set Label &#8230;</string>
 
     <string name="se_al_vibration">Vibration</string>
@@ -161,19 +149,23 @@
 
     <string name="contact_us">Contact Us</string>
 
-    <string name="cu_contact_us">Send us your valuable feedback describing your experience while using FebWeather.
+    <string name="cu_contact_us">Send us your valuable feedback describing your experience while using FebuWeather.
         \n\nWe will be happy to reply and to take up every suggestion seriously thereby making each of our
         user\'s experience an even more Febulous One !</string>
 
-    <string name="cu_name">Name</string>
+    <string name="cu_full_name">Full Name</string>
 
-    <string name="cu_email_id">Email-Id</string>
+    <string name="cu_email_id">Email - Id</string>
 
     <string name="cu_subject">Subject</string>
 
     <string name="cu_message">Type in your Message &#8230;</string>
 
-    <string name="cu_send_message">Send Message</string>
+    <string name="cu_send_message">Send Message !</string>
+
+    <string name="cu_rate_us">Rate Us !</string>
+
+    <string name="cu_find_us">Check out our other Applications !</string>
 
 
 </resources>

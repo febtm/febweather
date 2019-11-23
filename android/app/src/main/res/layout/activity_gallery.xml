@@ -57,17 +57,16 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:contentDescription="@null"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/app_logo"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorSecondary"
-            android:textSize="20sp"
-            android:layout_marginBottom="30dp"
-            android:textStyle="bold|italic"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
             android:text="@string/app_name"/>
 
         <com.google.android.gms.ads.AdView
@@ -75,9 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             ads:adSize="BANNER"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            ads:adUnitId="@string/ga_admob_banner">
+            android:layout_marginTop="40dp"
+            ads:adUnitId="@string/admob_banner_gallery">
         </com.google.android.gms.ads.AdView>
 
         <TextView
@@ -86,8 +84,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorSecondary"
             android:textSize="16sp"
-            android:layout_marginTop="30dp"
-            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            android:textStyle="bold|italic"
             android:text="@string/ga_loc_name_usa"/>
 
         <FrameLayout
