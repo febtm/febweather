@@ -1,0 +1,179 @@
+<resources>
+
+    <string name="app_name">FebWeather</string>
+
+    <string name="facebook_app_id">452605265081922</string>
+
+
+    <string name="wi_no_location_permission">Location Permission Not Granted\n\Grant it and try again !</string>
+
+    <string name="wi_no_network">No Internet Connection\n\nClick here to try again !</string>
+
+
+    <string name="ap_dismiss">Dismiss</string>
+
+    <string name="ap_time">Time</string>
+
+    <string name="ap_location">Location</string>
+
+    <string name="ap_date">Date</string>
+
+
+    <string name="ml_admob_banner">ca-app-pub-6196885651315287/6066562253</string>
+
+    <string name="ol_admob_banner">ca-app-pub-6196885651315287/9020028650</string>
+
+    <string name="ga_admob_banner">ca-app-pub-6196885651315287/1496761856</string>
+
+    <string name="cu_admob_banner">ca-app-pub-6196885651315287/4450228259</string>
+
+    <string name="se_admob_banner">ca-app-pub-6196885651315287/2973495055</string>
+
+
+    <string name="menu">Menu</string>
+
+    <string-array name="menu_titles">
+        <item>My Location</item>
+        <item>Other Locations</item>
+        <item>Settings</item>
+        <item>Gallery</item>
+        <item>Contact Us</item>
+        <item>Rate Us</item>
+        <item>Find Us</item>
+        <item>Exit</item>
+    </string-array>
+
+    <array name="menu_icons">
+        <item>@drawable/me_my_location</item>
+        <item>@drawable/me_other_locations</item>
+        <item>@drawable/me_settings</item>
+        <item>@drawable/me_gallery</item>
+        <item>@drawable/me_contact_us</item>
+        <item>@drawable/me_rate_us</item>
+        <item>@drawable/me_find_us</item>
+        <item>@drawable/me_exit</item>
+    </array>
+
+
+    <string name="my_location">My Location</string>
+
+    <string name="ml_enter_location">Enter a Location &#8230;</string>
+
+    <string name="ml_hourly">Hourly (3 hours)</string>
+
+    <string name="ml_hours">48 hours</string>
+
+    <string name="ml_other_details">Other Details</string>
+
+    <string name="ml_conditions">Conditions</string>
+
+    <string name="ml_wind_speed">Wind Speed</string>
+
+    <string name="ml_wind_angle">Wind Angle</string>
+
+    <string name="ml_sunrise_time">Sunrise Time</string>
+
+    <string name="ml_sunset_time">Sunset Time</string>
+
+    <string name="ml_daily">Daily</string>
+
+    <string name="ml_days">10 days</string>
+
+
+    <string name="other_locations">Other Locations</string>
+
+
+    <string name="gallery">Gallery</string>
+
+    <string name="ga_loc_id_usa">ChIJCzYy5IS16lQRQrfeQ5K5Oxw</string>
+
+    <string name="ga_loc_id_uk">ChIJqZHHQhE7WgIReiWIMkOg-MQ</string>
+
+    <string name="ga_loc_id_aus">ChIJ38WHZwf9KysRUhNblaFnglM</string>
+
+    <string name="ga_loc_id_nz">ChIJh5Z3Fw4gLG0RM0dqdeIY1rE</string>
+
+    <string name="ga_loc_id_india">ChIJkbeSa_BfYzARphNChaFPjNc</string>
+
+    <string name="ga_loc_name_usa">United States of America</string>
+
+    <string name="ga_loc_name_uk">United Kingdom</string>
+
+    <string name="ga_loc_name_aus">Australia</string>
+
+    <string name="ga_loc_name_nz">New Zealand</string>
+
+    <string name="ga_loc_name_india">India</string>
+
+
+    <string name="settings">Settings</string>
+
+    <string name="se_unit_settings">Unit Settings</string>
+
+    <string name="se_un_temperature">Temperature</string>
+
+    <string name="se_unit_temperature_c">°C</string>
+
+    <string name="se_unit_temperature_f">°F</string>
+
+    <string name="se_un_wind_speed">Wind Speed</string>
+
+    <string name="se_unit_wind_speed_ms">m / s</string>
+
+    <string name="se_unit_wind_speed_kmhr">km / hr</string>
+
+    <string name="se_notification_settings">Notification Settings</string>
+
+    <string name="se_not_morning">Morning</string>
+
+    <string name="se_not_afternoon">Afternoon</string>
+
+    <string name="se_not_evening">Evening</string>
+
+    <string name="se_alarm_settings">Alarm Settings</string>
+
+    <string name="se_al_set_label">Set Label &#8230;</string>
+
+    <string name="se_al_vibration">Vibration</string>
+
+    <string name="se_al_alarm_duration">Alarm Duration</string>
+
+    <string name="se_al_snooze_duration">Snooze Duration</string>
+
+    <string name="se_al_time">Time</string>
+
+    <string name="se_al_days">Days</string>
+
+    <string name="se_al_sunday">Sunday</string>
+
+    <string name="se_al_monday">Monday</string>
+
+    <string name="se_al_tuesday">Tuesday</string>
+
+    <string name="se_al_wednesday">Wednesday</string>
+
+    <string name="se_al_thursday">Thursday</string>
+
+    <string name="se_al_friday">Friday</string>
+
+    <string name="se_al_saturday">Saturday</string>
+
+
+    <string name="contact_us">Contact Us</string>
+
+    <string name="cu_contact_us">Send us your valuable feedback describing your experience while using FebWeather.
+        \n\nWe will be happy to reply and to take up every suggestion seriously thereby making each of our
+        user\'s experience an even more Febulous One !</string>
+
+    <string name="cu_name">Name</string>
+
+    <string name="cu_email_id">Email-Id</string>
+
+    <string name="cu_subject">Subject</string>
+
+    <string name="cu_message">Type in your Message &#8230;</string>
+
+    <string name="cu_send_message">Send Message</string>
+
+
+</resources>

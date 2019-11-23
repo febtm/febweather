@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "267996912210",
+    "project_id": "fmt-febuweather"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267996912210:android:50f915f8d3ff101a",
+        "android_client_info": {
+          "package_name": "fmt.febuweather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267996912210-7g20gdptpk1mdq0qpime5bh2cbqh3nvb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYk2w9xpAXBQ0d2z62khFt1ZiliWXVK6w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-82463638-3"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

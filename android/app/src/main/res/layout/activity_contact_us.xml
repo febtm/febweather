@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/cu_background">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent">
+
+        <ImageButton
+            android:id="@+id/cu_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/app_menu"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/contact_us"
+            android:textSize="18sp"
+            android:textColor="@color/colorSecondary" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical|end"
+            android:background="@drawable/me_contact_us"/>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="@null"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/app_logo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorSecondary"
+                android:textSize="20sp"
+                android:layout_marginBottom="30dp"
+                android:textStyle="bold|italic"
+                android:text="@string/app_name"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/cu_contact_us"
+                android:textColor="@color/colorSecondary"
+                android:layout_marginBottom="20dp"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/cu_adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                ads:adUnitId="@string/cu_admob_banner">
+            </com.google.android.gms.ads.AdView>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorPrimaryTransparent77"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                tools:ignore="RtlHardcoded">
+
+                <EditText
+                    android:id="@+id/cu_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/cu_name"
+                    android:textColor="@color/colorSecondary"
+                    android:textColorHint="@color/colorSecondary"
+                    android:textStyle="bold"
+                    android:inputType="textCapWords"
+                    android:gravity="start"
+                    android:textSize="15sp"
+                    android:paddingRight="30dp"
+                    android:paddingEnd="30dp"
+                    tools:ignore="RtlSymmetry"
+                    android:padding="10dp" />
+
+                <ImageButton
+                    android:id="@+id/cu_name_cancel"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center|end"
+                    android:background="@drawable/app_cancel"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@null" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorPrimaryTransparent77"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                tools:ignore="RtlHardcoded">
+
+                <EditText
+                    android:id="@+id/cu_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/cu_email_id"
+                    android:textColor="@color/colorSecondary"
+                    android:textColorHint="@color/colorSecondary"
+                    android:textStyle="bold"
+                    android:inputType="textEmailAddress"
+                    android:gravity="start"
+                    android:textSize="15sp"
+                    android:paddingRight="30dp"
+                    android:paddingEnd="30dp"
+                    tools:ignore="RtlSymmetry"
+                    android:padding="10dp" />
+
+                <ImageButton
+                    android:id="@+id/cu_email_cancel"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center|end"
+                    android:background="@drawable/app_cancel"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@null" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorPrimaryTransparent77"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                tools:ignore="RtlHardcoded">
+
+                <EditText
+                    android:id="@+id/cu_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/cu_subject"
+                    android:textColor="@color/colorSecondary"
+                    android:textColorHint="@color/colorSecondary"
+                    android:textStyle="bold"
+                    android:inputType="textCapSentences"
+                    android:gravity="start"
+                    android:textSize="15sp"
+                    android:paddingRight="30dp"
+                    android:paddingEnd="30dp"
+                    tools:ignore="RtlSymmetry"
+                    android:padding="10dp" />
+
+                <ImageButton
+                    android:id="@+id/cu_subject_cancel"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center|end"
+                    android:background="@drawable/app_cancel"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@null" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorPrimaryTransparent77"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                tools:ignore="RtlHardcoded">
+
+                <EditText
+                    android:id="@+id/cu_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/cu_message"
+                    android:textColor="@color/colorSecondary"
+                    android:textColorHint="@color/colorSecondary"
+                    android:textStyle="bold"
+                    android:inputType="textCapSentences"
+                    android:gravity="start"
+                    android:textSize="15sp"
+                    android:paddingRight="30dp"
+                    android:paddingEnd="30dp"
+                    tools:ignore="RtlSymmetry"
+                    android:padding="10dp" />
+
+                <ImageButton
+                    android:id="@+id/cu_message_cancel"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center|end"
+                    android:background="@drawable/app_cancel"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@null" />
+
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/cu_send_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cu_send_message"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:background="@color/colorSecondary"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="20dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

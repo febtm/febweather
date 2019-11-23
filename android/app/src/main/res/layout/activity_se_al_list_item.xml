@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/colorPrimaryTransparent77"
+    android:padding="5dp"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/se_al_li_status"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center|start"
+        android:contentDescription="@null"
+        android:background="@drawable/se_alarm_on"/>
+
+     <LinearLayout
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center"
+         android:layout_marginLeft="45dp"
+         android:layout_marginRight="45dp"
+         android:orientation="vertical">
+
+         <TextView
+             android:id="@+id/se_al_li_time"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textSize="24sp"
+             android:textStyle="bold"
+             android:layout_marginBottom="20dp"
+             android:layout_gravity="center"
+             android:textColor="@color/colorSecondary" />
+
+         <TextView
+             android:id="@+id/se_al_li_days"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center"
+             android:textColor="@color/colorSecondary"
+             android:textStyle="bold"
+             android:textSize="14sp"/>
+
+     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center|end"
+        android:orientation="vertical">
+
+        <Switch
+            android:id="@+id/se_al_li_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"/>
+
+        <ImageButton
+            android:id="@+id/se_al_li_delete"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@null"
+            android:background="@drawable/app_delete"/>
+
+    </LinearLayout>
+
+</FrameLayout>
